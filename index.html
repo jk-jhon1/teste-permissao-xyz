@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1020">
+  <meta name="description" content="Dashboard investigativo interativo sobre deepfakes, confiança e verificação de fontes.">
+  <title>Sinal ou Deepfake? — Dashboard investigativo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação do dashboard">
+      <a class="brand" href="#inicio" aria-label="Sinal ou Deepfake, início">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span class="brand-name">sinal<span class="brand-slash">/</span>ruído<small>LAB DE INVESTIGAÇÃO</small></span>
+      </a>
+      <div class="side-label">INVESTIGAÇÃO 01</div>
+      <nav class="side-nav">
+        <a class="active" href="#visao-geral"><span class="nav-icon">◫</span> Visão geral <span class="nav-dot"></span></a>
+        <a href="#evidencias"><span class="nav-icon">⌁</span> Evidências</a>
+        <a href="#leitura"><span class="nav-icon">◎</span> Leitura crítica</a>
+        <a href="#metodo"><span class="nav-icon">⌘</span> Método & ética</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="side-status"><span class="pulse"></span><span>AMBIENTE DE DEMONSTRAÇÃO</span></div>
+        <div class="sidebar-note">Um dado não é uma resposta.<br>É uma pista para investigar.</div>
+        <div class="side-footer">MARATONA TECH <span>2026</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="inicio">
+      <header class="topbar">
+        <div class="breadcrumb"><span>LAB DE DADOS</span><i>/</i><strong>DEEPFAKE NA ESCOLA</strong></div>
+        <div class="topbar-right"><span class="live-indicator"></span><span>RELATÓRIO INTERATIVO</span><span class="topbar-divider"></span><span class="date-label">FASE 02 <b>·</b> NÍVEL 03</span></div>
+      </header>
+
+      <section class="hero" id="visao-geral">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-line"></span> DILEMA DIGITAL <span class="eyebrow-count">01 — 04</span></div>
+          <h1>Sinal ou<br><em>deepfake?</em></h1>
+          <p class="hero-deck">Quando um vídeo viraliza, o que faz a gente desconfiar? Uma investigação sobre verificação de fontes e leitura crítica de conteúdo.</p>
+          <div class="hero-tags"><span><i class="tag-dot blue"></i> CULTURA DIGITAL</span><span><i class="tag-dot yellow"></i> ENSINO MÉDIO</span><span><i class="tag-dot mint"></i> PESQUISA EXPLORATÓRIA</span></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="scan-card"><div class="scan-top"><span>ANÁLISE DE SINAL</span><span class="scan-live">● AO VIVO</span></div><div class="scan-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="scan-foot"><span>FONTE</span><b>?</b><span>CONTEXTO</span><b>?</b><span>CONFIANÇA</span></div></div>
+          <div class="orbit-label label-a">VERIFICAR <span>→</span></div><div class="orbit-label label-b"><span>↗</span> QUESTIONAR</div><div class="hero-index">01<span> / </span>04</div>
+        </div>
+      </section>
+
+      <section class="question-band" aria-label="Pergunta e hipótese">
+        <div class="question-block"><div class="section-kicker"><span class="kicker-number">01</span> PERGUNTA INVESTIGATIVA</div><h2>Quem verifica a fonte percebe mais sinais de manipulação?</h2><p>Comparamos hábitos de verificação com a identificação de sinais suspeitos em vídeos que circulam nas redes.</p></div>
+        <div class="hypothesis-block"><div class="section-kicker"><span class="kicker-number yellow-number">02</span> NOSSA HIPÓTESE</div><div class="hypothesis-quote"><span class="quote-mark">“</span><p>Estudantes que verificam a fonte antes de compartilhar identificarão sinais de manipulação com mais frequência.</p></div><div class="hypothesis-meta"><span>HIPÓTESE TESTÁVEL</span><span class="meta-separator">/</span><span>ASSOCIAÇÃO, NÃO CAUSALIDADE</span></div></div>
+      </section>
+
+      <section class="data-toolbar" aria-label="Controles de dados">
+        <div class="data-source"><span class="source-icon">▤</span><div><strong id="dataset-title">Amostra demonstrativa</strong><small id="dataset-description">Dados sintéticos · não representam pessoas reais</small></div></div>
+        <div class="toolbar-controls">
+          <label class="filter-label" for="grade-filter">FILTRAR POR SÉRIE</label>
+          <div class="select-wrap"><select id="grade-filter" aria-label="Filtrar dados por série"><option value="todas">Todas as séries</option><option value="1ª série">1ª série</option><option value="2ª série">2ª série</option><option value="3ª série">3ª série</option></select><span class="select-chevron">⌄</span></div>
+          <button class="button button-quiet" id="download-csv" type="button" title="Baixar os dados atuais como CSV"><span>↓</span> Exportar CSV</button>
+          <label class="button button-import" for="csv-input"><span>＋</span> Importar dados<input id="csv-input" type="file" accept=".csv,text/csv" hidden></label>
+        </div>
+      </section>
+      <div class="data-notice" id="data-notice"><span class="notice-icon">i</span><span><strong>Transparência:</strong> os <b id="notice-count">24 registros exibidos</b> são sintéticos e servem apenas para demonstrar o dashboard. Para a pesquisa da Fase 2, colete pelo menos 20 respostas reais, voluntárias e anônimas; depois, importe o CSV.</span><button id="dismiss-notice" type="button" aria-label="Dispensar aviso">×</button></div>
+
+      <section class="metrics-grid" aria-label="Indicadores principais">
+        <article class="metric-card"><div class="metric-label">RESPOSTAS NO RECORTE <span class="metric-symbol">↗</span></div><div class="metric-value" id="metric-total">24<span> respostas</span></div><div class="metric-foot"><span class="metric-bar bar-blue"></span><span id="metric-total-note">100% da amostra demonstrativa</span></div></article>
+        <article class="metric-card"><div class="metric-label">IDENTIFICARAM SINAIS <span class="metric-symbol">◉</span></div><div class="metric-value" id="metric-detect">—<span> do grupo</span></div><div class="metric-foot"><span class="metric-bar bar-mint"></span><span>Relataram ao menos um sinal suspeito</span></div></article>
+        <article class="metric-card metric-highlight"><div class="metric-label">DIFERENÇA ENTRE GRUPOS <span class="metric-symbol">Δ</span></div><div class="metric-value" id="metric-gap">—<span> p.p.</span></div><div class="metric-foot"><span class="metric-bar bar-yellow"></span><span>Verificaram fonte vs. não verificaram</span></div></article>
+        <article class="metric-card"><div class="metric-label">SÉRIES NO RECORTE <span class="metric-symbol">⌖</span></div><div class="metric-value" id="metric-grades">3<span> séries</span></div><div class="metric-foot"><span class="metric-bar bar-purple"></span><span>Variável de segmentação</span></div></article>
+      </section>
+
+      <section class="evidence-section" id="evidencias">
+        <div class="section-heading"><div><div class="section-kicker"><span class="kicker-number">03</span> EVIDÊNCIAS DO DASHBOARD</div><h2>Olhar de perto.<br><em>Comparar com cuidado.</em></h2></div><div class="section-heading-note">Dois recortes complementares para testar a hipótese.<br><span>Use o filtro acima para explorar as séries.</span></div></div>
+        <div class="charts-grid">
+          <article class="chart-card chart-card-wide"><div class="chart-head"><div><div class="chart-overline">01 / COMPARAÇÃO</div><h3>Verificar a fonte muda o olhar?</h3><p>Percentual que relatou ao menos um indício visual, de áudio ou de contexto em cada grupo.</p></div><div class="chart-menu-mark">···</div></div><div id="comparison-chart" class="chart-visual" role="img" aria-label="Gráfico de comparação da identificação de sinais por verificação de fonte"></div><div class="chart-legend"><span><i class="legend-square legend-blue"></i> Identificou sinais</span><span><i class="legend-square legend-muted"></i> Não identificou</span><span class="chart-unit">% DE CADA GRUPO</span></div><div class="chart-insight" id="comparison-insight"><span class="insight-arrow">↗</span><span>Carregando leitura dos dados...</span></div></article>
+          <article class="chart-card"><div class="chart-head"><div><div class="chart-overline">02 / COMPORTAMENTO</div><h3>O que fazem<br>com a dúvida?</h3><p>Primeira ação diante de um vídeo suspeito.</p></div><div class="chart-menu-mark">···</div></div><div id="action-chart" class="chart-visual action-visual" role="img" aria-label="Gráfico de distribuição da ação inicial perante um vídeo suspeito"></div><div class="chart-legend stacked-legend" id="action-legend"></div><div class="chart-insight insight-quiet"><span class="insight-arrow">◎</span><span>Uma intenção declarada não garante o comportamento real.</span></div></article>
+        </div>
+      </section>
+
+      <section class="interpretation-grid" id="leitura">
+        <article class="finding-card"><div class="section-kicker"><span class="kicker-number yellow-number">04</span> CONCLUSÃO DA INVESTIGAÇÃO</div><div class="finding-status" id="finding-status"><span class="status-dot"></span> LEITURA DOS DADOS</div><h2 id="finding-title">Amostra demonstrativa: a hipótese será avaliada pelos dados.</h2><p id="finding-text">Os resultados aparecerão aqui conforme o filtro selecionado. Lembre-se: uma diferença observada é uma associação, não prova de causa.</p><div class="finding-foot"><span class="finding-line"></span><span id="finding-footnote">CONCLUSÃO ATUALIZADA COM O FILTRO</span></div></article>
+        <article class="ai-card"><div class="ai-header"><div><div class="section-kicker"><span class="ai-spark">✳</span> VERIFICAÇÃO CRÍTICA DA IA</div><h3>Uma leitura para questionar.</h3></div><span class="ai-demo-tag">LEITURA DEMONSTRATIVA</span></div><div class="ai-quote"><span class="ai-quote-mark">“</span><p id="ai-reading">A leitura gerada a partir dos dados aparecerá aqui.</p></div><div class="ai-divider"></div><div class="ai-check-grid"><div><span class="check-label"><i class="check-icon check-green">✓</i> O QUE OS DADOS APOIAM</span><p id="ai-support">Aguardando dados do recorte.</p></div><div><span class="check-label"><i class="check-icon check-orange">!</i> O QUE A IA NÃO PODE CONCLUIR</span><p>Correlação não prova causa. A amostra pode não representar todos os estudantes e as respostas são autorrelatadas.</p></div></div><div class="ai-disclaimer"><span>✳</span> Esta análise é uma hipótese de leitura, não uma verdade. Confira os números e discorde quando as evidências pedirem.</div></article>
+      </section>
+
+      <section class="method-section" id="metodo">
+        <div class="method-heading"><div class="section-kicker"><span class="kicker-number">05</span> COMO A INVESTIGAÇÃO FOI PENSADA</div><h2>Do recorte à <em>evidência.</em></h2></div>
+        <div class="method-grid">
+          <article class="method-card"><span class="method-number">01</span><div><h3>Recorte & pergunta</h3><p>Conteúdos virais com possível manipulação digital e como estudantes avaliam a confiabilidade antes de compartilhar.</p></div></article>
+          <article class="method-card"><span class="method-number">02</span><div><h3>Variáveis observadas</h3><p><b>Explicativa:</b> verificar a fonte. <b>Resposta:</b> identificar sinais. <b>Contexto:</b> série escolar e primeira ação.</p></div></article>
+          <article class="method-card"><span class="method-number">03</span><div><h3>Análise exploratória</h3><p>Comparamos proporções, observamos a distribuição das ações e usamos o filtro de série para procurar diferenças no recorte.</p></div></article>
+          <article class="method-card"><span class="method-number">04</span><div><h3>Limites da descoberta</h3><p>Associação não prova causalidade. Amostra por conveniência, autorrelato e tamanho reduzido limitam qualquer generalização.</p></div></article>
+        </div>
+        <div class="ethics-panel"><div class="ethics-icon">⌁</div><div class="ethics-copy"><div class="section-kicker">COLETA ÉTICA · LGPD</div><h3>Consentimento antes de qualquer pergunta.</h3><p id="consent-text">Esta pesquisa escolar investiga como estudantes avaliam vídeos suspeitos. A participação é voluntária e anônima; não pedimos nome, e-mail ou telefone. As respostas serão usadas apenas para fins educativos e apresentadas em conjunto. Você pode não responder ou parar quando quiser. Ao continuar, você confirma que leu este aviso e concorda em participar.</p></div><button class="copy-consent" id="copy-consent" type="button"><span>▣</span> COPIAR AVISO</button></div>
+        <div class="ethics-foot"><span><i class="ethics-check">✓</i> NÃO COLETAR DADOS PESSOAIS</span><span><i class="ethics-check">✓</i> PERGUNTAR SÓ O ESSENCIAL</span><span><i class="ethics-check">✓</i> CONFERIR A PLANILHA ANTES DE USAR IA</span></div>
+      </section>
+
+      <footer class="page-footer"><div class="footer-brand"><span class="brand-mark small-mark"><span></span><span></span><span></span></span> SINAL<span class="brand-slash">/</span>RUÍDO</div><span>UMA INVESTIGAÇÃO SOBRE CONFIANÇA DIGITAL</span><span>MARATONA TECH 2026 <b>·</b> FASE 2</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
