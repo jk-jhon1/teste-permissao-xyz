@@ -40,7 +40,7 @@ function doPost(e) {
   const params = (e && e.parameter) || {};
 
   // Honeypot field: silently discard likely bot submissions.
-  if (String(params.website || '').trim()) return text_('OK');
+  if (String(params.website_extra || '').trim()) return text_('OK');
 
   const serie = String(params.serie || '').trim();
   const verifiesSource = String(params.verificou_fonte || '').trim();

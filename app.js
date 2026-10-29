@@ -18,6 +18,8 @@ const ACTION_COLORS = ['#20d1c1','#158cff','#ffd05a','#59677e'];
 let data = sampleData;
 let isRealData = false;
 let toastTimer;
+let savedRowCount = null;
+let jsonpCounter = 0;
 const $ = (selector) => document.querySelector(selector);
 const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (n,d) => d ? Math.round((n/d)*100) : 0;
@@ -90,19 +92,54 @@ function fetchSavedResponses(){
   const base=endpoint();
   if(!base)return Promise.resolve(null);
   return new Promise(resolve=>{
-    const callbackName='__maklynReceiveResponses';
+    const callbackName=`__maklynRead_${Date.now()}_${++jsonpCounter}`;
     const script=document.createElement('script');
     let finished=false;
-    const finish=rows=>{if(finished)return;finished=true;delete window[callbackName];script.remove();resolve(Array.isArray(rows)?rows:null)};
+    let timer;
+    const finish=rows=>{
+      if(finished)return;
+      finished=true;
+      clearTimeout(timer);
+      delete window[callbackName];
+      script.remove();
+      resolve(Array.isArray(rows)?rows:null);
+    };
     window[callbackName]=rows=>{
       const clean=Array.isArray(rows)?rows.filter(row=>row&&['1ª série','2ª série','3ª série'].includes(row.serie)&&['Sim','Não'].includes(row.verificou_fonte)&&['Sim','Não'].includes(row.identificou_sinais)&&ACTIONS.includes(row.acao)):[];
-      if(clean.length){data=clean;isRealData=true;$('#dataset-title').textContent='Respostas recebidas';$('#dataset-description').textContent=`${clean.length} respostas anônimas salvas na planilha`;update();}
+      savedRowCount=clean.length;
+      if(clean.length){
+        data=clean;
+        isRealData=true;
+        $('#dataset-title').textContent='Respostas recebidas';
+        $('#dataset-description').textContent=`${clean.length} respostas anônimas salvas na planilha`;
+        update();
+      }
+      const status=$('#survey-status');
+      status.classList.remove('error');
+      status.classList.add('success');
+      status.textContent=clean.length?`${clean.length} respostas encontradas na planilha.`:'Planilha conectada; ainda não há respostas registradas.';
       finish(clean);
     };
-    script.onerror=()=>finish(null);
-    const url=new URL(base);url.searchParams.set('action','list');url.searchParams.set('callback',callbackName);url.searchParams.set('v',Date.now());
-    script.src=url.toString();document.head.appendChild(script);
-    setTimeout(()=>finish(null),12000);
+    script.onerror=()=>{
+      const status=$('#survey-status');
+      status.classList.remove('success');
+      status.classList.add('error');
+      status.textContent='Não consegui acessar a planilha. Confira se o Apps Script está implantado como app da Web, executado por você e acessível a qualquer pessoa.';
+      finish(null);
+    };
+    const url=new URL(base);
+    url.searchParams.set('action','list');
+    url.searchParams.set('callback',callbackName);
+    url.searchParams.set('v',Date.now());
+    script.src=url.toString();
+    document.head.appendChild(script);
+    timer=setTimeout(()=>{
+      const status=$('#survey-status');
+      status.classList.remove('success');
+      status.classList.add('error');
+      status.textContent='A planilha não respondeu. Confira a implantação e atualize a versão do app da Web no Apps Script.';
+      finish(null);
+    },8000);
   });
 }
 
@@ -110,18 +147,43 @@ $('#grade-filter').addEventListener('change',update);
 $('#survey-form').addEventListener('submit',async event=>{
   event.preventDefault();
   const status=$('#survey-status'),button=$('.survey-submit'),form=event.currentTarget,formData=new FormData(form);
-  if(String(formData.get('website')||'').trim())return;
+  if(String(formData.get('website_extra')||'').trim())return;
   const url=endpoint();
-  if(!url){status.textContent='Envio ainda não ativado. O responsável precisa publicar o Apps Script e configurar config.js.';status.classList.add('error');return;}
-  status.classList.remove('error','success');status.textContent='Enviando sua resposta…';button.disabled=true;
+  if(!url){status.textContent='Envio não ativado: configure a URL do Apps Script em config.js.';status.classList.add('error');return;}
+  status.classList.remove('error','success');
+  status.textContent='Enviando e conferindo a resposta na planilha…';
+  button.disabled=true;
   const payload=new URLSearchParams();
-  ['serie','verificou_fonte','identificou_sinais','acao','consentimento','website'].forEach(key=>payload.set(key,String(formData.get(key)||'')));
+  ['serie','verificou_fonte','identificou_sinais','acao','consentimento','website_extra'].forEach(key=>payload.set(key,String(formData.get(key)||'')));
   try{
+    let before=savedRowCount;
+    if(before===null){
+      const initial=await fetchSavedResponses();
+      if(!Array.isArray(initial))throw new Error('A planilha não respondeu. Confira implantação, acesso e URL em config.js.');
+      before=initial.length;
+    }
     await fetch(url,{method:'POST',mode:'no-cors',body:payload,redirect:'follow'});
-    status.textContent='Resposta enviada. Obrigado por participar!';status.classList.add('success');form.reset();
-    setTimeout(()=>fetchSavedResponses(),1200);
-  }catch(error){status.textContent='Não foi possível enviar. Confira a conexão e tente novamente.';status.classList.add('error');}
-  finally{button.disabled=false;}
+    let latest=null;
+    for(let attempt=0;attempt<4;attempt++){
+      await new Promise(resolve=>setTimeout(resolve,700));
+      latest=await fetchSavedResponses();
+      if(Array.isArray(latest)&&latest.length>before)break;
+      if(!Array.isArray(latest))break;
+    }
+    if(Array.isArray(latest)&&latest.length>before){
+      status.textContent='Resposta gravada na planilha. Obrigado por participar!';
+      status.classList.add('success');
+      form.reset();
+    }else{
+      status.textContent='Não confirmei a gravação. Reimplante a versão mais recente do Apps Script e confira se o acesso está como “Qualquer pessoa”.';
+      status.classList.add('error');
+    }
+  }catch(error){
+    status.textContent=error.message||'Falha ao enviar. Confira a conexão e tente novamente.';
+    status.classList.add('error');
+  }finally{
+    button.disabled=false;
+  }
 });
 $('#csv-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const text=await file.text();const parsed=parseCSV(text);data=parsed;isRealData=true;$('#dataset-title').textContent=file.name;$('#dataset-description').textContent=`${parsed.length} registros importados nesta sessão · confira anonimização e origem real`;update();showToast(`${parsed.length} registros carregados. Para a pesquisa, use 20+ respostas reais e anônimas.`)}catch(err){showToast(err.message)}finally{event.target.value=''}});
 $('#download-csv').addEventListener('click',()=>{const rows=currentRows();const csv=['serie,verificou_fonte,identificou_sinais,acao',...rows.map(r=>[r.serie,r.verificou_fonte,r.identificou_sinais,r.acao].map(v=>`"${v.replaceAll('"','""')}"`).join(','))].join('\n');const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));link.download='dados-anonimos-dashboard.csv';link.click();URL.revokeObjectURL(link.href);showToast(`${rows.length} respostas exportadas em CSV.`)});
