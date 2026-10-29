@@ -18,6 +18,8 @@ const ACTION_COLORS = ['#20d1c1','#158cff','#ffd05a','#59677e'];
 let data = sampleData;
 let isRealData = false;
 let toastTimer;
+let savedRowCount = null;
+let jsonpCounter = 0;
 const $ = (selector) => document.querySelector(selector);
 const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (n,d) => d ? Math.round((n/d)*100) : 0;
@@ -30,18 +32,18 @@ function showToast(message){const toast=$('#toast');toast.textContent=message;to
 
 function renderComparison(rows){
   const groups=[{label:'Verificaram fonte',value:'Sim',color:'#158cff'},{label:'Não verificaram',value:'Não',color:'#34435a'}];
-  const width=590,height=194,left=42,right=18,top=18,bottom=38,plotW=width-left-right,plotH=height-top-bottom;
+  const width=520,height=208,left=50,right=18,top=18,bottom=51,plotW=width-left-right,plotH=height-top-bottom;
   if(!rows.length){$('#comparison-chart').innerHTML='<div class="empty-chart">Sem respostas para este filtro.</div>';return}
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Proporção que identificou sinais de manipulação, comparando estudantes que verificaram a fonte e estudantes que não verificaram.">`;
-  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="13.5" font-family="DM Mono,monospace">${v}%</text>`});
+  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="19" font-family="DM Mono,monospace">${v}%</text>`});
   const centers=[left+plotW*.31,left+plotW*.73],barW=72;
   groups.forEach((g,i)=>{
     const result=rate(rows,'identificou_sinais',g.value), yesPct=pct(result.yes,result.n),x=centers[i]-barW/2,y=top+plotH-(yesPct/100)*plotH,h=(yesPct/100)*plotH;
     svg+=`<rect x="${x}" y="${top}" width="${barW}" height="${plotH}" rx="4" fill="#28364b"/>`;
     if(h>0)svg+=`<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${g.color}" opacity=".94"/>`;
-    svg+=`<text x="${centers[i]}" y="${Math.max(14,y-7)}" text-anchor="middle" fill="#f0f5fc" font-size="12" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-18}" text-anchor="middle" fill="#aab7c9" font-size="14" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-5}" text-anchor="middle" fill="#718198" font-size="13" font-family="DM Mono,monospace">n = ${result.n}</text>`;
+    svg+=`<text x="${centers[i]}" y="${Math.max(22,y-8)}" text-anchor="middle" fill="#f0f5fc" font-size="19" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-32}" text-anchor="middle" fill="#aab7c9" font-size="21" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-8}" text-anchor="middle" fill="#718198" font-size="19" font-family="DM Mono,monospace">n = ${result.n}</text>`;
   });
   svg+='</svg>';$('#comparison-chart').innerHTML=svg;
 }
@@ -49,9 +51,9 @@ function renderActions(rows){
   const chart=$('#action-chart'),legend=$('#action-legend');
   if(!rows.length){chart.innerHTML='<div class="empty-chart">Sem respostas para este filtro.</div>';legend.innerHTML='';return}
   const values=ACTIONS.map((action,i)=>({action,i,count:rows.filter(r=>r.acao===action).length}));
-  const width=430,height=194,left=145,right=41,top=17,rowH=40,barW=width-left-right,max=Math.max(1,...values.map(v=>v.count));
+  const width=540,height=194,left=210,right=40,top=15,rowH=42,barH=18,barW=width-left-right,max=Math.max(1,...values.map(v=>v.count));
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Distribuição das primeiras ações diante de um vídeo suspeito, em ${rows.length} respostas.">`;
-  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+13}" text-anchor="end" fill="#aab7c9" font-size="14" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="14" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="14" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+11}" text-anchor="end" fill="#dce5f1" font-size="14" font-family="DM Mono,monospace">${percent}%</text>`});
+  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+16}" text-anchor="end" fill="#aab7c9" font-size="21" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="${barH}" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="${barH}" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+15}" text-anchor="end" fill="#dce5f1" font-size="21" font-family="DM Mono,monospace">${percent}%</text>`});
   svg+='</svg>';chart.innerHTML=svg;
   legend.innerHTML=values.map(v=>`<span><i style="background:${ACTION_COLORS[v.i]}"></i>${esc(v.action)} · ${v.count}</span>`).join('');
 }
@@ -90,19 +92,54 @@ function fetchSavedResponses(){
   const base=endpoint();
   if(!base)return Promise.resolve(null);
   return new Promise(resolve=>{
-    const callbackName='__maklynReceiveResponses';
+    const callbackName=`__maklynRead_${Date.now()}_${++jsonpCounter}`;
     const script=document.createElement('script');
     let finished=false;
-    const finish=rows=>{if(finished)return;finished=true;delete window[callbackName];script.remove();resolve(Array.isArray(rows)?rows:null)};
+    let timer;
+    const finish=rows=>{
+      if(finished)return;
+      finished=true;
+      clearTimeout(timer);
+      delete window[callbackName];
+      script.remove();
+      resolve(Array.isArray(rows)?rows:null);
+    };
     window[callbackName]=rows=>{
       const clean=Array.isArray(rows)?rows.filter(row=>row&&['1ª série','2ª série','3ª série'].includes(row.serie)&&['Sim','Não'].includes(row.verificou_fonte)&&['Sim','Não'].includes(row.identificou_sinais)&&ACTIONS.includes(row.acao)):[];
-      if(clean.length){data=clean;isRealData=true;$('#dataset-title').textContent='Respostas recebidas';$('#dataset-description').textContent=`${clean.length} respostas anônimas salvas na planilha`;update();}
+      savedRowCount=clean.length;
+      if(clean.length){
+        data=clean;
+        isRealData=true;
+        $('#dataset-title').textContent='Respostas recebidas';
+        $('#dataset-description').textContent=`${clean.length} respostas anônimas salvas na planilha`;
+        update();
+      }
+      const status=$('#survey-status');
+      status.classList.remove('error');
+      status.classList.add('success');
+      status.textContent=clean.length?`${clean.length} respostas encontradas na planilha.`:'Planilha conectada; ainda não há respostas registradas.';
       finish(clean);
     };
-    script.onerror=()=>finish(null);
-    const url=new URL(base);url.searchParams.set('action','list');url.searchParams.set('callback',callbackName);url.searchParams.set('v',Date.now());
-    script.src=url.toString();document.head.appendChild(script);
-    setTimeout(()=>finish(null),12000);
+    script.onerror=()=>{
+      const status=$('#survey-status');
+      status.classList.remove('success');
+      status.classList.add('error');
+      status.textContent='Não consegui acessar a planilha. Confira se o Apps Script está implantado como app da Web, executado por você e acessível a qualquer pessoa.';
+      finish(null);
+    };
+    const url=new URL(base);
+    url.searchParams.set('action','list');
+    url.searchParams.set('callback',callbackName);
+    url.searchParams.set('v',Date.now());
+    script.src=url.toString();
+    document.head.appendChild(script);
+    timer=setTimeout(()=>{
+      const status=$('#survey-status');
+      status.classList.remove('success');
+      status.classList.add('error');
+      status.textContent='A planilha não respondeu. Confira a implantação e atualize a versão do app da Web no Apps Script.';
+      finish(null);
+    },8000);
   });
 }
 
@@ -110,18 +147,43 @@ $('#grade-filter').addEventListener('change',update);
 $('#survey-form').addEventListener('submit',async event=>{
   event.preventDefault();
   const status=$('#survey-status'),button=$('.survey-submit'),form=event.currentTarget,formData=new FormData(form);
-  if(String(formData.get('website')||'').trim())return;
+  if(String(formData.get('website_extra')||'').trim())return;
   const url=endpoint();
-  if(!url){status.textContent='Envio ainda não ativado. O responsável precisa publicar o Apps Script e configurar config.js.';status.classList.add('error');return;}
-  status.classList.remove('error','success');status.textContent='Enviando sua resposta…';button.disabled=true;
+  if(!url){status.textContent='Envio não ativado: configure a URL do Apps Script em config.js.';status.classList.add('error');return;}
+  status.classList.remove('error','success');
+  status.textContent='Enviando e conferindo a resposta na planilha…';
+  button.disabled=true;
   const payload=new URLSearchParams();
-  ['serie','verificou_fonte','identificou_sinais','acao','consentimento','website'].forEach(key=>payload.set(key,String(formData.get(key)||'')));
+  ['serie','verificou_fonte','identificou_sinais','acao','consentimento','website_extra'].forEach(key=>payload.set(key,String(formData.get(key)||'')));
   try{
+    let before=savedRowCount;
+    if(before===null){
+      const initial=await fetchSavedResponses();
+      if(!Array.isArray(initial))throw new Error('A planilha não respondeu. Confira implantação, acesso e URL em config.js.');
+      before=initial.length;
+    }
     await fetch(url,{method:'POST',mode:'no-cors',body:payload,redirect:'follow'});
-    status.textContent='Resposta enviada. Obrigado por participar!';status.classList.add('success');form.reset();
-    setTimeout(()=>fetchSavedResponses(),1200);
-  }catch(error){status.textContent='Não foi possível enviar. Confira a conexão e tente novamente.';status.classList.add('error');}
-  finally{button.disabled=false;}
+    let latest=null;
+    for(let attempt=0;attempt<4;attempt++){
+      await new Promise(resolve=>setTimeout(resolve,700));
+      latest=await fetchSavedResponses();
+      if(Array.isArray(latest)&&latest.length>before)break;
+      if(!Array.isArray(latest))break;
+    }
+    if(Array.isArray(latest)&&latest.length>before){
+      status.textContent='Resposta gravada na planilha. Obrigado por participar!';
+      status.classList.add('success');
+      form.reset();
+    }else{
+      status.textContent='Não confirmei a gravação. Reimplante a versão mais recente do Apps Script e confira se o acesso está como “Qualquer pessoa”.';
+      status.classList.add('error');
+    }
+  }catch(error){
+    status.textContent=error.message||'Falha ao enviar. Confira a conexão e tente novamente.';
+    status.classList.add('error');
+  }finally{
+    button.disabled=false;
+  }
 });
 $('#csv-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const text=await file.text();const parsed=parseCSV(text);data=parsed;isRealData=true;$('#dataset-title').textContent=file.name;$('#dataset-description').textContent=`${parsed.length} registros importados nesta sessão · confira anonimização e origem real`;update();showToast(`${parsed.length} registros carregados. Para a pesquisa, use 20+ respostas reais e anônimas.`)}catch(err){showToast(err.message)}finally{event.target.value=''}});
 $('#download-csv').addEventListener('click',()=>{const rows=currentRows();const csv=['serie,verificou_fonte,identificou_sinais,acao',...rows.map(r=>[r.serie,r.verificou_fonte,r.identificou_sinais,r.acao].map(v=>`"${v.replaceAll('"','""')}"`).join(','))].join('\n');const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));link.download='dados-anonimos-dashboard.csv';link.click();URL.revokeObjectURL(link.href);showToast(`${rows.length} respostas exportadas em CSV.`)});
