@@ -38,3 +38,31 @@
   .side-nav a,.select-wrap select,.button,.data-source strong,.metric-value span,
   .method-card h3,.ethics-copy h3 { font-size: 15.5px; }
 }
+
+.questionnaire-section{margin-top:20px;padding:22px 24px 19px;background:linear-gradient(135deg,#101b2e,#0d1727);border:1px solid #26364d;border-radius:7px;scroll-margin-top:22px}
+.questionnaire-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding-bottom:17px;border-bottom:1px solid #243248}
+.questionnaire-intro h2{font:750 23px/1.2 var(--display);letter-spacing:-.04em;margin:10px 0 6px}
+.questionnaire-intro h2 em{font-style:normal;color:var(--cyan)}
+.questionnaire-intro p{max-width:680px;font-size:13px;line-height:1.65;color:#9baabd;margin:0}
+.survey-time{font:500 10px var(--mono);letter-spacing:.08em;color:#aebbd0;border:1px solid #31415a;border-radius:4px;padding:7px 9px;white-space:nowrap}
+.survey-form{padding-top:15px}
+.survey-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.survey-field{display:flex;gap:11px;align-items:flex-start;padding:12px 13px;background:#0c1626;border:1px solid #202e43;border-radius:5px;min-width:0}
+.field-number{display:grid;place-items:center;flex:0 0 23px;height:23px;border:1px solid #31536c;border-radius:50%;color:var(--cyan);font:500 10px var(--mono)}
+.field-content{display:grid;gap:9px;flex:1;min-width:0}
+.field-content strong{font:600 12px/1.45 var(--display);color:#dce5f1}
+.field-content select{width:100%;appearance:none;min-height:37px;border:1px solid #34445c;border-radius:4px;background:#111e31;color:#c5d2e2;padding:8px 11px;font:500 11px var(--sans);cursor:pointer}
+.field-content select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.survey-consent{display:flex;gap:10px;align-items:flex-start;margin-top:14px;color:#9eacc0;font-size:11px;line-height:1.55;cursor:pointer}
+.survey-consent input{accent-color:var(--cyan);width:16px;height:16px;flex:0 0 16px;margin:1px 0 0}
+.survey-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;opacity:0!important}
+.survey-submit-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px}
+.survey-submit{border:1px solid #1b817e;border-radius:4px;background:#11333d;color:#d7fffa;padding:10px 14px;font:700 11px var(--display);cursor:pointer;transition:background .2s,border-color .2s}
+.survey-submit span{padding-left:12px;color:var(--cyan);font-size:15px}
+.survey-submit:hover:not(:disabled){background:#174752;border-color:#2bc2b6}
+.survey-submit:disabled{opacity:.6;cursor:wait}
+.survey-status{margin:0;color:#7f8fa6;font-size:10px;line-height:1.5}
+.survey-status.error{color:#ffb479}.survey-status.success{color:#67e0c3}
+@media(min-width:1101px){.questionnaire-intro p{font-size:14.5px}.field-content strong{font-size:14px}.field-content select{font-size:13px}.survey-consent{font-size:13px}.survey-submit{font-size:13px}.survey-status{font-size:12px}.survey-time{font-size:11px}}
+@media(max-width:780px){.questionnaire-section{padding:18px}.survey-fields{grid-template-columns:1fr}.questionnaire-intro h2{font-size:21px}.questionnaire-intro p{font-size:12px}}
+@media(max-width:520px){.questionnaire-section{padding:15px 13px}.questionnaire-intro{flex-direction:column}.survey-time{align-self:flex-start}.field-content strong{font-size:12.5px}.field-content select{font-size:12px}.survey-consent{font-size:11.5px}}
