@@ -4,7 +4,7 @@ const sampleData = [
   ['2ª série','Sim','Sim','Conferir a fonte'],['2ª série','Sim','Sim','Perguntar a alguém'],['2ª série','Sim','Não','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],
   ['2ª série','Não','Não','Compartilhar'],['2ª série','Não','Não','Perguntar a alguém'],
   ['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Não','Sim','Não compartilhar'],
-  // 32 registros adicionais simulados para demonstrar filtros e variação entre grupos.
+  // Registros sintéticos extras para demonstrar a variação nos filtros e gráficos.
   ['1ª série','Sim','Sim','Não compartilhar'],['1ª série','Sim','Sim','Conferir a fonte'],['1ª série','Sim','Não','Perguntar a alguém'],['1ª série','Sim','Sim','Perguntar a alguém'],['1ª série','Sim','Sim','Não compartilhar'],
   ['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Perguntar a alguém'],['1ª série','Não','Sim','Não compartilhar'],['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Conferir a fonte'],
   ['2ª série','Sim','Sim','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],['2ª série','Sim','Sim','Perguntar a alguém'],['2ª série','Sim','Não','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],['2ª série','Sim','Sim','Conferir a fonte'],
@@ -25,22 +25,23 @@ const selectedGrade = () => $('#grade-filter').value;
 const currentRows = () => data.filter(row => selectedGrade()==='todas' || row.serie===selectedGrade());
 const rate = (rows, field, value) => { const group=rows.filter(r=>r.verificou_fonte===value); return {n:group.length, yes:group.filter(r=>r[field]==='Sim').length}; };
 const fmtRate = (n,d) => d ? `${pct(n,d)}%` : '—';
-function showToast(message){const toast=$('#toast');toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2500)}
+const endpoint = () => String(window.MAKLYN_APPS_SCRIPT_URL || '').trim();
+function showToast(message){const toast=$('#toast');toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),3200)}
 
 function renderComparison(rows){
   const groups=[{label:'Verificaram fonte',value:'Sim',color:'#158cff'},{label:'Não verificaram',value:'Não',color:'#34435a'}];
   const width=590,height=194,left=42,right=18,top=18,bottom=38,plotW=width-left-right,plotH=height-top-bottom;
   if(!rows.length){$('#comparison-chart').innerHTML='<div class="empty-chart">Sem respostas para este filtro.</div>';return}
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Proporção que identificou sinais de manipulação, comparando estudantes que verificaram a fonte e estudantes que não verificaram.">`;
-  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="14" font-family="DM Mono,monospace">${v}%</text>`});
+  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="13.5" font-family="DM Mono,monospace">${v}%</text>`});
   const centers=[left+plotW*.31,left+plotW*.73],barW=72;
   groups.forEach((g,i)=>{
     const result=rate(rows,'identificou_sinais',g.value), yesPct=pct(result.yes,result.n),x=centers[i]-barW/2,y=top+plotH-(yesPct/100)*plotH,h=(yesPct/100)*plotH;
     svg+=`<rect x="${x}" y="${top}" width="${barW}" height="${plotH}" rx="4" fill="#28364b"/>`;
     if(h>0)svg+=`<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${g.color}" opacity=".94"/>`;
-    svg+=`<text x="${centers[i]}" y="${Math.max(14,y-7)}" text-anchor="middle" fill="#f0f5fc" font-size="13.5" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-18}" text-anchor="middle" fill="#aab7c9" font-size="13" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-5}" text-anchor="middle" fill="#718198" font-size="14" font-family="DM Mono,monospace">n = ${result.n}</text>`;
+    svg+=`<text x="${centers[i]}" y="${Math.max(14,y-7)}" text-anchor="middle" fill="#f0f5fc" font-size="12" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-18}" text-anchor="middle" fill="#aab7c9" font-size="14" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-5}" text-anchor="middle" fill="#718198" font-size="13" font-family="DM Mono,monospace">n = ${result.n}</text>`;
   });
   svg+='</svg>';$('#comparison-chart').innerHTML=svg;
 }
@@ -50,7 +51,7 @@ function renderActions(rows){
   const values=ACTIONS.map((action,i)=>({action,i,count:rows.filter(r=>r.acao===action).length}));
   const width=430,height=194,left=145,right=41,top=17,rowH=40,barW=width-left-right,max=Math.max(1,...values.map(v=>v.count));
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Distribuição das primeiras ações diante de um vídeo suspeito, em ${rows.length} respostas.">`;
-  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+13}" text-anchor="end" fill="#aab7c9" font-size="13" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="14" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="14" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+11}" text-anchor="end" fill="#dce5f1" font-size="13" font-family="DM Mono,monospace">${percent}%</text>`});
+  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+13}" text-anchor="end" fill="#aab7c9" font-size="14" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="14" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="14" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+11}" text-anchor="end" fill="#dce5f1" font-size="14" font-family="DM Mono,monospace">${percent}%</text>`});
   svg+='</svg>';chart.innerHTML=svg;
   legend.innerHTML=values.map(v=>`<span><i style="background:${ACTION_COLORS[v.i]}"></i>${esc(v.action)} · ${v.count}</span>`).join('');
 }
@@ -58,7 +59,7 @@ function renderMetrics(rows){
   const total=rows.length,detected=rows.filter(r=>r.identificou_sinais==='Sim').length,yes=rate(rows,'identificou_sinais','Sim'),no=rate(rows,'identificou_sinais','Não');
   const gap= yes.n&&no.n ? pct(yes.yes,yes.n)-pct(no.yes,no.n):null;
   $('#metric-total').innerHTML=`${total}<span> respostas</span>`;
-  $('#metric-total-note').textContent= isRealData?'No conjunto importado':'Amostra simulada · não são pessoas reais';
+  $('#metric-total-note').textContent= isRealData?'No conjunto recebido':'Amostra demonstrativa';
   $('#metric-detect').innerHTML=`${fmtRate(detected,total)}<span> do grupo</span>`;
   $('#metric-gap').innerHTML=`${gap===null?'—':`${gap>0?'+':''}${gap}`}<span> p.p.</span>`;
   $('#metric-grades').innerHTML=`${new Set(rows.map(r=>r.serie)).size}<span> ${new Set(rows.map(r=>r.serie)).size===1?'série':'séries'}</span>`;
@@ -80,28 +81,50 @@ function renderInterpretation(rows){
   else{status='RESULTADO INCONCLUSIVO';title='Os grupos ficaram próximos neste recorte.';text=`${yesP}% de quem verificou e ${noP}% de quem não verificou identificaram sinais: diferença de apenas ${Math.abs(gap)} pontos percentuais ${scope}. A hipótese não foi claramente confirmada nem refutada pelos dados disponíveis.`;trend=`Diferença de ${Math.abs(gap)} p.p. entre os grupos; resultado inconclusivo.`;}
   $('#finding-status').innerHTML=`<span class="status-dot"></span> ${status}`;$('#finding-title').textContent=title;$('#finding-text').textContent=text;$('#finding-footnote').textContent=`CONCLUSÃO ATUALIZADA · ${rows.length} RESPOSTAS`;
   $('#comparison-insight').innerHTML=`<span class="insight-arrow">↗</span><span>${esc(trend)}</span>`;
-  $('#ai-reading').textContent=`${y.n&&n.n?`Estudantes que verificaram a fonte identificaram sinais em ${yesP}% dos casos observados, enquanto o grupo que não verificou identificou em ${noP}%. ${gap>5?'Isso é compatível com a hipótese de associação.':gap< -5?'O padrão observado não acompanha a hipótese inicial.':'A diferença é pequena e não aponta uma associação clara.'}`:'O filtro atual não contém os dois grupos necessários para comparar a hipótese.'} ${isRealData?'Esta é uma leitura exploratória do conjunto importado.':'Lembre-se: os registros exibidos são sintéticos, criados apenas para demonstrar a visualização.'}`;
+  $('#ai-reading').textContent=`${y.n&&n.n?`Estudantes que verificaram a fonte identificaram sinais em ${yesP}% dos casos observados, enquanto o grupo que não verificou identificou em ${noP}%. ${gap>5?'Isso é compatível com a hipótese de associação.':gap< -5?'O padrão observado não acompanha a hipótese inicial.':'A diferença é pequena e não aponta uma associação clara.'}`:'O filtro atual não contém os dois grupos necessários para comparar a hipótese.'} ${isRealData?'Esta é uma leitura exploratória do conjunto recebido.':'Lembre-se: os registros exibidos são sintéticos, criados apenas para demonstrar a visualização.'}`;
   $('#ai-support').textContent=y.n&&n.n?`No recorte, ${y.yes} de ${y.n} que verificaram a fonte e ${n.yes} de ${n.n} que não verificaram identificaram sinais. A diferença observada é de ${Math.abs(gap)} p.p.`:'Precisamos observar os dois grupos — quem verificou e quem não verificou — para comparar as proporções.';
 }
 function update(){const rows=currentRows();renderMetrics(rows);renderComparison(rows);renderActions(rows);renderInterpretation(rows);}
 
-function parseCSV(text){
-  const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(line=>line.trim());
-  if(lines.length<2)throw new Error('O CSV precisa ter cabeçalho e pelo menos uma resposta.');
-  const delimiter=(lines[0].match(/;/g)||[]).length>(lines[0].match(/,/g)||[]).length?';':',';
-  const parseLine=line=>{const out=[];let cell='',quoted=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'&&line[i+1]==='"'&&quoted){cell+='"';i++}else if(c==='"')quoted=!quoted;else if(c===delimiter&&!quoted){out.push(cell.trim());cell=''}else cell+=c}out.push(cell.trim());return out};
-  const headers=parseLine(lines[0]).map(h=>h.toLowerCase().trim());
-  const required=['serie','verificou_fonte','identificou_sinais','acao'];
-  if(required.some(h=>!headers.includes(h)))throw new Error('Cabeçalhos obrigatórios: serie, verificou_fonte, identificou_sinais, acao.');
-  const index=Object.fromEntries(required.map(h=>[h,headers.indexOf(h)]));
-  const normalizeGrade=v=>{const s=v.toLowerCase().trim();if(['1','1ª','1a','1ª série','1a série','1 serie'].includes(s))return '1ª série';if(['2','2ª','2a','2ª série','2a série','2 serie'].includes(s))return '2ª série';if(['3','3ª','3a','3ª série','3a série','3 serie'].includes(s))return '3ª série';return null};
-  const normalizeYes=v=>{const s=v.toLowerCase().trim();if(['sim','s','yes'].includes(s))return 'Sim';if(['não','nao','n','no'].includes(s))return 'Não';return null};
-  const actionNorm=v=>{const s=v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();return ACTIONS.find(a=>a.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')===s)||null};
-  const rows=lines.slice(1).map((line,i)=>{const cells=parseLine(line);const row={serie:normalizeGrade(cells[index.serie]||''),verificou_fonte:normalizeYes(cells[index.verificou_fonte]||''),identificou_sinais:normalizeYes(cells[index.identificou_sinais]||''),acao:actionNorm(cells[index.acao]||'')};if(Object.values(row).some(v=>!v))throw new Error(`Resposta inválida na linha ${i+2}. Confira série, Sim/Não e ação.`);return row});
-  return rows;
+function fetchSavedResponses(){
+  const base=endpoint();
+  if(!base)return Promise.resolve(null);
+  return new Promise(resolve=>{
+    const callbackName='__maklynReceiveResponses';
+    const script=document.createElement('script');
+    let finished=false;
+    const finish=rows=>{if(finished)return;finished=true;delete window[callbackName];script.remove();resolve(Array.isArray(rows)?rows:null)};
+    window[callbackName]=rows=>{
+      const clean=Array.isArray(rows)?rows.filter(row=>row&&['1ª série','2ª série','3ª série'].includes(row.serie)&&['Sim','Não'].includes(row.verificou_fonte)&&['Sim','Não'].includes(row.identificou_sinais)&&ACTIONS.includes(row.acao)):[];
+      if(clean.length){data=clean;isRealData=true;$('#dataset-title').textContent='Respostas recebidas';$('#dataset-description').textContent=`${clean.length} respostas anônimas salvas na planilha`;update();}
+      finish(clean);
+    };
+    script.onerror=()=>finish(null);
+    const url=new URL(base);url.searchParams.set('action','list');url.searchParams.set('callback',callbackName);url.searchParams.set('v',Date.now());
+    script.src=url.toString();document.head.appendChild(script);
+    setTimeout(()=>finish(null),12000);
+  });
 }
+
 $('#grade-filter').addEventListener('change',update);
+$('#survey-form').addEventListener('submit',async event=>{
+  event.preventDefault();
+  const status=$('#survey-status'),button=$('.survey-submit'),form=event.currentTarget,formData=new FormData(form);
+  if(String(formData.get('website')||'').trim())return;
+  const url=endpoint();
+  if(!url){status.textContent='Envio ainda não ativado. O responsável precisa publicar o Apps Script e configurar config.js.';status.classList.add('error');return;}
+  status.classList.remove('error','success');status.textContent='Enviando sua resposta…';button.disabled=true;
+  const payload=new URLSearchParams();
+  ['serie','verificou_fonte','identificou_sinais','acao','consentimento','website'].forEach(key=>payload.set(key,String(formData.get(key)||'')));
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',body:payload,redirect:'follow'});
+    status.textContent='Resposta enviada. Obrigado por participar!';status.classList.add('success');form.reset();
+    setTimeout(()=>fetchSavedResponses(),1200);
+  }catch(error){status.textContent='Não foi possível enviar. Confira a conexão e tente novamente.';status.classList.add('error');}
+  finally{button.disabled=false;}
+});
 $('#csv-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const text=await file.text();const parsed=parseCSV(text);data=parsed;isRealData=true;$('#dataset-title').textContent=file.name;$('#dataset-description').textContent=`${parsed.length} registros importados nesta sessão · confira anonimização e origem real`;update();showToast(`${parsed.length} registros carregados. Para a pesquisa, use 20+ respostas reais e anônimas.`)}catch(err){showToast(err.message)}finally{event.target.value=''}});
 $('#download-csv').addEventListener('click',()=>{const rows=currentRows();const csv=['serie,verificou_fonte,identificou_sinais,acao',...rows.map(r=>[r.serie,r.verificou_fonte,r.identificou_sinais,r.acao].map(v=>`"${v.replaceAll('"','""')}"`).join(','))].join('\n');const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));link.download='dados-anonimos-dashboard.csv';link.click();URL.revokeObjectURL(link.href);showToast(`${rows.length} respostas exportadas em CSV.`)});
 $('#copy-consent').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#consent-text').textContent);showToast('Aviso de consentimento copiado.')}catch{showToast('Não foi possível copiar automaticamente. Selecione o texto do aviso.')}});
 update();
+fetchSavedResponses();
