@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a1020">
   <meta name="description" content="Dashboard investigativo interativo sobre deepfakes, confiança e verificação de fontes.">
-  <title>Sinal ou Deepfake? — Dashboard investigativo</title>
+  <title>Maklyn/Jhon Dashboard — Investigação</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,9 +14,9 @@
 <body>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Navegação do dashboard">
-      <a class="brand" href="#inicio" aria-label="Sinal ou Deepfake, início">
+      <a class="brand" href="#inicio" aria-label="Maklyn/Jhon Dashboard, início">
         <span class="brand-mark"><span></span><span></span><span></span></span>
-        <span class="brand-name">sinal<span class="brand-slash">/</span>ruído<small>LAB DE INVESTIGAÇÃO</small></span>
+        <span class="brand-name">Maklyn/Jhon Dashboard<small>LAB DE INVESTIGAÇÃO</small></span>
       </a>
       <div class="side-label">INVESTIGAÇÃO 01</div>
       <nav class="side-nav">
@@ -58,7 +58,7 @@
       </section>
 
       <section class="data-toolbar" aria-label="Controles de dados">
-        <div class="data-source"><span class="source-icon">▤</span><div><strong id="dataset-title">Amostra demonstrativa</strong><small id="dataset-description">Dados sintéticos · não representam pessoas reais</small></div></div>
+        <div class="data-source"><span class="source-icon">▤</span><div><strong id="dataset-title">Amostra demonstrativa</strong><small id="dataset-description">56 respostas simuladas · não são pesquisa real</small></div></div>
         <div class="toolbar-controls">
           <label class="filter-label" for="grade-filter">FILTRAR POR SÉRIE</label>
           <div class="select-wrap"><select id="grade-filter" aria-label="Filtrar dados por série"><option value="todas">Todas as séries</option><option value="1ª série">1ª série</option><option value="2ª série">2ª série</option><option value="3ª série">3ª série</option></select><span class="select-chevron">⌄</span></div>
@@ -66,7 +66,6 @@
           <label class="button button-import" for="csv-input"><span>＋</span> Importar dados<input id="csv-input" type="file" accept=".csv,text/csv" hidden></label>
         </div>
       </section>
-      <div class="data-notice" id="data-notice"><span class="notice-icon">i</span><span><strong>Transparência:</strong> os <b id="notice-count">24 registros exibidos</b> são sintéticos e servem apenas para demonstrar o dashboard. Para a pesquisa da Fase 2, colete pelo menos 20 respostas reais, voluntárias e anônimas; depois, importe o CSV.</span><button id="dismiss-notice" type="button" aria-label="Dispensar aviso">×</button></div>
 
       <section class="metrics-grid" aria-label="Indicadores principais">
         <article class="metric-card"><div class="metric-label">RESPOSTAS NO RECORTE <span class="metric-symbol">↗</span></div><div class="metric-value" id="metric-total">24<span> respostas</span></div><div class="metric-foot"><span class="metric-bar bar-blue"></span><span id="metric-total-note">100% da amostra demonstrativa</span></div></article>
@@ -94,13 +93,13 @@
           <article class="method-card"><span class="method-number">01</span><div><h3>Recorte & pergunta</h3><p>Conteúdos virais com possível manipulação digital e como estudantes avaliam a confiabilidade antes de compartilhar.</p></div></article>
           <article class="method-card"><span class="method-number">02</span><div><h3>Variáveis observadas</h3><p><b>Explicativa:</b> verificar a fonte. <b>Resposta:</b> identificar sinais. <b>Contexto:</b> série escolar e primeira ação.</p></div></article>
           <article class="method-card"><span class="method-number">03</span><div><h3>Análise exploratória</h3><p>Comparamos proporções, observamos a distribuição das ações e usamos o filtro de série para procurar diferenças no recorte.</p></div></article>
-          <article class="method-card"><span class="method-number">04</span><div><h3>Limites da descoberta</h3><p>Associação não prova causalidade. Amostra por conveniência, autorrelato e tamanho reduzido limitam qualquer generalização.</p></div></article>
+          <article class="method-card"><span class="method-number">04</span><div><h3>Limites da descoberta</h3><p>Esta base tem 56 respostas simuladas, não reais. Para a pesquisa, colete pelo menos 20 respostas reais e anônimas. Associação não prova causalidade.</p></div></article>
         </div>
         <div class="ethics-panel"><div class="ethics-icon">⌁</div><div class="ethics-copy"><div class="section-kicker">COLETA ÉTICA · LGPD</div><h3>Consentimento antes de qualquer pergunta.</h3><p id="consent-text">Esta pesquisa escolar investiga como estudantes avaliam vídeos suspeitos. A participação é voluntária e anônima; não pedimos nome, e-mail ou telefone. As respostas serão usadas apenas para fins educativos e apresentadas em conjunto. Você pode não responder ou parar quando quiser. Ao continuar, você confirma que leu este aviso e concorda em participar.</p></div><button class="copy-consent" id="copy-consent" type="button"><span>▣</span> COPIAR AVISO</button></div>
         <div class="ethics-foot"><span><i class="ethics-check">✓</i> NÃO COLETAR DADOS PESSOAIS</span><span><i class="ethics-check">✓</i> PERGUNTAR SÓ O ESSENCIAL</span><span><i class="ethics-check">✓</i> CONFERIR A PLANILHA ANTES DE USAR IA</span></div>
       </section>
 
-      <footer class="page-footer"><div class="footer-brand"><span class="brand-mark small-mark"><span></span><span></span><span></span></span> SINAL<span class="brand-slash">/</span>RUÍDO</div><span>UMA INVESTIGAÇÃO SOBRE CONFIANÇA DIGITAL</span><span>MARATONA TECH 2026 <b>·</b> FASE 2</span></footer>
+      <footer class="page-footer"><div class="footer-brand">MAKLYN/JHON DASHBOARD</div><span>UMA INVESTIGAÇÃO SOBRE CONFIANÇA DIGITAL</span><span>MARATONA TECH 2026 <b>·</b> FASE 2</span></footer>
     </main>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

@@ -1,4 +1,4 @@
-# Sinal ou Deepfake? — Dashboard Interativo
+# Maklyn/Jhon Dashboard — Investigação Interativa
 
 Dashboard demonstrativo para a Fase 2 · Nível 3 da Maratona Tech 2026. O projeto transforma os requisitos do guia em uma investigação interativa: tema, pergunta, hipótese testável, variáveis, dois gráficos complementares, filtro por série, conclusão baseada nos dados e verificação crítica da leitura da IA.
 
@@ -8,7 +8,7 @@ Abra `index.html` no navegador ou sirva a pasta com qualquer servidor estático.
 
 ## Dados e rigor da investigação
 
-O dashboard vem com **24 respostas sintéticas, apenas para demonstração**. Elas não são respostas de pessoas reais e não devem ser apresentadas como pesquisa concluída. Para cumprir a coleta descrita no guia, obtenha pelo menos 20 respostas reais com consentimento, sem nome/e-mail/telefone e sem coletar dados desnecessários. Depois, use **Importar CSV** para carregar as respostas anônimas.
+O dashboard vem com **56 respostas sintéticas, apenas para demonstração**. Elas não são respostas de pessoas reais e não devem ser apresentadas como pesquisa concluída. Para cumprir a coleta descrita no guia, obtenha pelo menos 20 respostas reais com consentimento, sem nome/e-mail/telefone e sem coletar dados desnecessários. Depois, use **Importar CSV** para carregar as respostas anônimas.
 
 O CSV deve conter exatamente estas colunas: `serie,verificou_fonte,identificou_sinais,acao`. Valores aceitos:
 
