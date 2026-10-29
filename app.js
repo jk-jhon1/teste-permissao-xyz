@@ -3,7 +3,14 @@ const sampleData = [
   ['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Sim','Perguntar a alguém'],['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Não compartilhar'],['1ª série','Não','Sim','Conferir a fonte'],['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Perguntar a alguém'],['1ª série','Não','Sim','Não compartilhar'],
   ['2ª série','Sim','Sim','Conferir a fonte'],['2ª série','Sim','Sim','Perguntar a alguém'],['2ª série','Sim','Não','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],
   ['2ª série','Não','Não','Compartilhar'],['2ª série','Não','Não','Perguntar a alguém'],
-  ['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Não','Sim','Não compartilhar']
+  ['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Não','Sim','Não compartilhar'],
+  // 32 registros adicionais simulados para demonstrar filtros e variação entre grupos.
+  ['1ª série','Sim','Sim','Não compartilhar'],['1ª série','Sim','Sim','Conferir a fonte'],['1ª série','Sim','Não','Perguntar a alguém'],['1ª série','Sim','Sim','Perguntar a alguém'],['1ª série','Sim','Sim','Não compartilhar'],
+  ['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Perguntar a alguém'],['1ª série','Não','Sim','Não compartilhar'],['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Conferir a fonte'],
+  ['2ª série','Sim','Sim','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],['2ª série','Sim','Sim','Perguntar a alguém'],['2ª série','Sim','Não','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],['2ª série','Sim','Sim','Conferir a fonte'],
+  ['2ª série','Não','Não','Compartilhar'],['2ª série','Não','Sim','Perguntar a alguém'],['2ª série','Não','Não','Compartilhar'],['2ª série','Não','Não','Não compartilhar'],['2ª série','Não','Sim','Conferir a fonte'],
+  ['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Sim','Sim','Perguntar a alguém'],['3ª série','Sim','Não','Não compartilhar'],['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Sim','Sim','Não compartilhar'],['3ª série','Sim','Sim','Perguntar a alguém'],
+  ['3ª série','Não','Não','Compartilhar'],['3ª série','Não','Sim','Não compartilhar'],['3ª série','Não','Não','Perguntar a alguém'],['3ª série','Não','Não','Compartilhar'],['3ª série','Não','Sim','Conferir a fonte']
 ].map(([serie,verificou_fonte,identificou_sinais,acao])=>({serie,verificou_fonte,identificou_sinais,acao}));
 
 const ACTIONS = ['Conferir a fonte','Perguntar a alguém','Não compartilhar','Compartilhar'];
@@ -25,15 +32,15 @@ function renderComparison(rows){
   const width=590,height=194,left=42,right=18,top=18,bottom=38,plotW=width-left-right,plotH=height-top-bottom;
   if(!rows.length){$('#comparison-chart').innerHTML='<div class="empty-chart">Sem respostas para este filtro.</div>';return}
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Proporção que identificou sinais de manipulação, comparando estudantes que verificaram a fonte e estudantes que não verificaram.">`;
-  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="8" font-family="DM Mono,monospace">${v}%</text>`});
+  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="14" font-family="DM Mono,monospace">${v}%</text>`});
   const centers=[left+plotW*.31,left+plotW*.73],barW=72;
   groups.forEach((g,i)=>{
     const result=rate(rows,'identificou_sinais',g.value), yesPct=pct(result.yes,result.n),x=centers[i]-barW/2,y=top+plotH-(yesPct/100)*plotH,h=(yesPct/100)*plotH;
     svg+=`<rect x="${x}" y="${top}" width="${barW}" height="${plotH}" rx="4" fill="#28364b"/>`;
     if(h>0)svg+=`<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${g.color}" opacity=".94"/>`;
-    svg+=`<text x="${centers[i]}" y="${Math.max(14,y-7)}" text-anchor="middle" fill="#f0f5fc" font-size="12" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-18}" text-anchor="middle" fill="#aab7c9" font-size="9" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-5}" text-anchor="middle" fill="#718198" font-size="8" font-family="DM Mono,monospace">n = ${result.n}</text>`;
+    svg+=`<text x="${centers[i]}" y="${Math.max(14,y-7)}" text-anchor="middle" fill="#f0f5fc" font-size="13.5" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-18}" text-anchor="middle" fill="#aab7c9" font-size="13" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-5}" text-anchor="middle" fill="#718198" font-size="14" font-family="DM Mono,monospace">n = ${result.n}</text>`;
   });
   svg+='</svg>';$('#comparison-chart').innerHTML=svg;
 }
@@ -41,9 +48,9 @@ function renderActions(rows){
   const chart=$('#action-chart'),legend=$('#action-legend');
   if(!rows.length){chart.innerHTML='<div class="empty-chart">Sem respostas para este filtro.</div>';legend.innerHTML='';return}
   const values=ACTIONS.map((action,i)=>({action,i,count:rows.filter(r=>r.acao===action).length}));
-  const width=430,height=194,left=120,right=41,top=17,rowH=40,barW=width-left-right,max=Math.max(1,...values.map(v=>v.count));
+  const width=430,height=194,left=145,right=41,top=17,rowH=40,barW=width-left-right,max=Math.max(1,...values.map(v=>v.count));
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Distribuição das primeiras ações diante de um vídeo suspeito, em ${rows.length} respostas.">`;
-  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+13}" text-anchor="end" fill="#aab7c9" font-size="9" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="14" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="14" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+11}" text-anchor="end" fill="#dce5f1" font-size="9" font-family="DM Mono,monospace">${percent}%</text>`});
+  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+13}" text-anchor="end" fill="#aab7c9" font-size="13" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="14" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="14" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+11}" text-anchor="end" fill="#dce5f1" font-size="13" font-family="DM Mono,monospace">${percent}%</text>`});
   svg+='</svg>';chart.innerHTML=svg;
   legend.innerHTML=values.map(v=>`<span><i style="background:${ACTION_COLORS[v.i]}"></i>${esc(v.action)} · ${v.count}</span>`).join('');
 }
@@ -51,11 +58,10 @@ function renderMetrics(rows){
   const total=rows.length,detected=rows.filter(r=>r.identificou_sinais==='Sim').length,yes=rate(rows,'identificou_sinais','Sim'),no=rate(rows,'identificou_sinais','Não');
   const gap= yes.n&&no.n ? pct(yes.yes,yes.n)-pct(no.yes,no.n):null;
   $('#metric-total').innerHTML=`${total}<span> respostas</span>`;
-  $('#metric-total-note').textContent= isRealData?'No conjunto importado':'100% da amostra demonstrativa';
+  $('#metric-total-note').textContent= isRealData?'No conjunto importado':'Amostra simulada · não são pessoas reais';
   $('#metric-detect').innerHTML=`${fmtRate(detected,total)}<span> do grupo</span>`;
   $('#metric-gap').innerHTML=`${gap===null?'—':`${gap>0?'+':''}${gap}`}<span> p.p.</span>`;
   $('#metric-grades').innerHTML=`${new Set(rows.map(r=>r.serie)).size}<span> ${new Set(rows.map(r=>r.serie)).size===1?'série':'séries'}</span>`;
-  $('#notice-count').textContent=`${total} ${total===1?'registro exibido':'registros exibidos'}`;
 }
 function renderInterpretation(rows){
   const y=rate(rows,'identificou_sinais','Sim'),n=rate(rows,'identificou_sinais','Não');
@@ -95,9 +101,7 @@ function parseCSV(text){
   return rows;
 }
 $('#grade-filter').addEventListener('change',update);
-$('#csv-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const text=await file.text();const parsed=parseCSV(text);data=parsed;isRealData=true;$('#dataset-title').textContent=file.name;$('#dataset-description').textContent=`${parsed.length} respostas importadas · carregadas localmente no navegador`;
-  const notice=$('#data-notice');notice.style.display='flex';notice.innerHTML='<span class="notice-icon">i</span><span><strong>Dados importados:</strong> Respostas carregadas apenas nesta sessão. Para a pesquisa, use pelo menos 20 respostas reais, voluntárias e anônimas. Antes de importar, remova nomes, contatos e qualquer dado pessoal; o dashboard não envia os dados a um servidor.</span><button id="dismiss-notice" type="button" aria-label="Dispensar aviso">×</button>';$('#dismiss-notice').addEventListener('click',()=>notice.style.display='none');update();showToast(`${parsed.length} respostas carregadas com sucesso.`)}catch(err){showToast(err.message)}finally{event.target.value=''}});
+$('#csv-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const text=await file.text();const parsed=parseCSV(text);data=parsed;isRealData=true;$('#dataset-title').textContent=file.name;$('#dataset-description').textContent=`${parsed.length} registros importados nesta sessão · confira anonimização e origem real`;update();showToast(`${parsed.length} registros carregados. Para a pesquisa, use 20+ respostas reais e anônimas.`)}catch(err){showToast(err.message)}finally{event.target.value=''}});
 $('#download-csv').addEventListener('click',()=>{const rows=currentRows();const csv=['serie,verificou_fonte,identificou_sinais,acao',...rows.map(r=>[r.serie,r.verificou_fonte,r.identificou_sinais,r.acao].map(v=>`"${v.replaceAll('"','""')}"`).join(','))].join('\n');const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));link.download='dados-anonimos-dashboard.csv';link.click();URL.revokeObjectURL(link.href);showToast(`${rows.length} respostas exportadas em CSV.`)});
 $('#copy-consent').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#consent-text').textContent);showToast('Aviso de consentimento copiado.')}catch{showToast('Não foi possível copiar automaticamente. Selecione o texto do aviso.')}});
-$('#dismiss-notice').addEventListener('click',()=>$('#data-notice').style.display='none');
 update();
