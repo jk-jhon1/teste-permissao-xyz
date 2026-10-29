@@ -30,18 +30,18 @@ function showToast(message){const toast=$('#toast');toast.textContent=message;to
 
 function renderComparison(rows){
   const groups=[{label:'Verificaram fonte',value:'Sim',color:'#158cff'},{label:'Não verificaram',value:'Não',color:'#34435a'}];
-  const width=590,height=194,left=42,right=18,top=18,bottom=38,plotW=width-left-right,plotH=height-top-bottom;
+  const width=520,height=208,left=50,right=18,top=18,bottom=51,plotW=width-left-right,plotH=height-top-bottom;
   if(!rows.length){$('#comparison-chart').innerHTML='<div class="empty-chart">Sem respostas para este filtro.</div>';return}
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Proporção que identificou sinais de manipulação, comparando estudantes que verificaram a fonte e estudantes que não verificaram.">`;
-  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="13.5" font-family="DM Mono,monospace">${v}%</text>`});
+  [0,25,50,75,100].forEach(v=>{const y=top+plotH-(v/100)*plotH;svg+=`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#26344a" stroke-width="1"/><text x="${left-9}" y="${y+3}" text-anchor="end" fill="#77869b" font-size="19" font-family="DM Mono,monospace">${v}%</text>`});
   const centers=[left+plotW*.31,left+plotW*.73],barW=72;
   groups.forEach((g,i)=>{
     const result=rate(rows,'identificou_sinais',g.value), yesPct=pct(result.yes,result.n),x=centers[i]-barW/2,y=top+plotH-(yesPct/100)*plotH,h=(yesPct/100)*plotH;
     svg+=`<rect x="${x}" y="${top}" width="${barW}" height="${plotH}" rx="4" fill="#28364b"/>`;
     if(h>0)svg+=`<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${g.color}" opacity=".94"/>`;
-    svg+=`<text x="${centers[i]}" y="${Math.max(14,y-7)}" text-anchor="middle" fill="#f0f5fc" font-size="12" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-18}" text-anchor="middle" fill="#aab7c9" font-size="14" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
-    svg+=`<text x="${centers[i]}" y="${height-5}" text-anchor="middle" fill="#718198" font-size="13" font-family="DM Mono,monospace">n = ${result.n}</text>`;
+    svg+=`<text x="${centers[i]}" y="${Math.max(22,y-8)}" text-anchor="middle" fill="#f0f5fc" font-size="19" font-weight="700" font-family="DM Sans,sans-serif">${result.n?yesPct+'%':'—'}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-32}" text-anchor="middle" fill="#aab7c9" font-size="21" font-family="DM Sans,sans-serif">${esc(g.label)}</text>`;
+    svg+=`<text x="${centers[i]}" y="${height-8}" text-anchor="middle" fill="#718198" font-size="19" font-family="DM Mono,monospace">n = ${result.n}</text>`;
   });
   svg+='</svg>';$('#comparison-chart').innerHTML=svg;
 }
@@ -49,9 +49,9 @@ function renderActions(rows){
   const chart=$('#action-chart'),legend=$('#action-legend');
   if(!rows.length){chart.innerHTML='<div class="empty-chart">Sem respostas para este filtro.</div>';legend.innerHTML='';return}
   const values=ACTIONS.map((action,i)=>({action,i,count:rows.filter(r=>r.acao===action).length}));
-  const width=430,height=194,left=145,right=41,top=17,rowH=40,barW=width-left-right,max=Math.max(1,...values.map(v=>v.count));
+  const width=540,height=194,left=210,right=40,top=15,rowH=42,barH=18,barW=width-left-right,max=Math.max(1,...values.map(v=>v.count));
   let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Distribuição das primeiras ações diante de um vídeo suspeito, em ${rows.length} respostas.">`;
-  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+13}" text-anchor="end" fill="#aab7c9" font-size="14" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="14" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="14" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+11}" text-anchor="end" fill="#dce5f1" font-size="14" font-family="DM Mono,monospace">${percent}%</text>`});
+  values.forEach((v,i)=>{const y=top+i*rowH,w=(v.count/Math.max(rows.length,max))*barW,percent=pct(v.count,rows.length);svg+=`<text x="${left-10}" y="${y+16}" text-anchor="end" fill="#aab7c9" font-size="21" font-family="DM Sans,sans-serif">${esc(v.action)}</text>`;svg+=`<rect x="${left}" y="${y}" width="${barW}" height="${barH}" rx="3" fill="#25334a"/>`;if(v.count)svg+=`<rect x="${left}" y="${y}" width="${Math.max(4,w)}" height="${barH}" rx="3" fill="${ACTION_COLORS[v.i]}"/>`;svg+=`<text x="${width-4}" y="${y+15}" text-anchor="end" fill="#dce5f1" font-size="21" font-family="DM Mono,monospace">${percent}%</text>`});
   svg+='</svg>';chart.innerHTML=svg;
   legend.innerHTML=values.map(v=>`<span><i style="background:${ACTION_COLORS[v.i]}"></i>${esc(v.action)} · ${v.count}</span>`).join('');
 }
