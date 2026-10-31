@@ -274,3 +274,37 @@ $("#copyBtn").addEventListener("click", async () => {
 
 /* data */
 $("#today").textContent = new Date().toLocaleDateString("pt-BR");
+
+/* ============================================================
+   DOWNLOAD DO PDF (com fallback por Blob)
+   ============================================================ */
+(function () {
+  const btn = document.getElementById("downloadBtn");
+  if (!btn) return;
+  const note = document.getElementById("dlNote");
+  const FILE = "NUCLEO-ZERO-prompt.pdf";
+
+  async function blobDownload() {
+    const res = await fetch("download", { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = FILE;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+
+  btn.addEventListener("click", async (ev) => {
+    try {
+      await blobDownload();
+      if (note) note.innerHTML = "Download iniciado — confira a pasta de downloads do navegador.";
+    } catch (err) {
+      // deixa o navegador seguir o link normal (href="download")
+      if (note) note.innerHTML = "Não foi possível baixar por aqui. Use o botão <b>Abrir no GitHub</b> e clique em “Download raw file”.";
+    }
+  });
+})();
