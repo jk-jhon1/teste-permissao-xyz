@@ -37,3 +37,25 @@ O envio do questionário usa o Apps Script configurado em `config.js` para grava
 - `index.html` — conteúdo semântico da investigação
 - `styles.css` — layout responsivo e identidade visual
 - `app.js` — filtro, importação de dados, gráficos SVG e conclusões dinâmicas
+
+## Zona de Conflito — FPS de sobrevivência (`fps.html`)
+
+Jogo de tiro em primeira pessoa com arena de sobrevivência por ondas, construído em Three.js (vendido em `vendor/three.module.js`, sem dependências externas). Abra `fps.html` no navegador ou sirva a pasta com qualquer servidor estático.
+
+### Recursos
+
+- **60 armas** (pistolas, submetralhadoras, espingardas, fuzis de assalto, snipers e metralhadoras) com dano, cadência, carregador, munição de reserva, dispersão, recuo, raridade, preço e nível de desbloqueio próprios.
+- **Sistema de recarga**: pressione **R** para recarregar; a arma fica indisponível durante o tempo de recarga e recarrega automaticamente quando o carregador esvazia ao atirar.
+- **50 tipos de inimigos** em 5 tiers (zumbis, cães robóticos, drones, ciborgues, demônios, chefes…) que escalam vida, velocidade e dano conforme a onda avança.
+- **Ranqueamento**: elimine inimigos para ganhar XP e dinheiro, suba de nível e avance nas patentes (Ferro → Desafiante). O progresso (armas compradas, dinheiro, patente, nível) fica salvo no `localStorage`.
+- **Loadout**: compre e equipe até 6 armas nos slots 1–6.
+- **Controles**: WASD mover · Shift correr · Espaço pular · Mouse mirar e atirar · R recarregar · 1–6 trocar arma · ESC pausa.
+
+### Executar
+
+Abra `fps.html` diretamente ou sirva a repo, por exemplo:
+
+```
+python3 -m http.server 8765 --bind 0.0.0.0
+# então acesse http://localhost:8765/fps.html
+```

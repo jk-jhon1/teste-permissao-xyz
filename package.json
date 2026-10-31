@@ -1,0 +1,23 @@
+{
+  "name": "teste-permissao-xyz",
+  "version": "1.0.0",
+  "description": "Dashboard demonstrativo para a Fase 2 · Nível 3 da Maratona Tech 2026. O projeto transforma os requisitos do guia em uma investigação interativa: tema, pergunta, hipótese testável, variáveis, dois gráficos complementares, filtro por série, conclusão baseada nos dados e verificação crítica da leitura da IA.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jk-jhon1/teste-permissao-xyz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jk-jhon1/teste-permissao-xyz/issues"
+  },
+  "homepage": "https://github.com/jk-jhon1/teste-permissao-xyz#readme",
+  "dependencies": {
+    "three": "^0.168.0"
+  }
+}

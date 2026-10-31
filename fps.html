@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05070a">
+  <title>Zona de Conflito — FPS de Sobrevivência</title>
+  <link rel="stylesheet" href="fps.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <div id="dmgFlash"></div>
+
+  <!-- HUD (visível durante o jogo) -->
+  <div id="hud" class="layer">
+    <div class="panel panel-rank">
+      <div class="panel-title">PATENTE</div>
+      <div id="txt-rank" class="rank-value">Ferro I</div>
+      <div class="xp-row">
+        <div class="xp-bar"><div id="fill-xp" class="xp-fill"></div></div>
+        <div class="xp-text">NÍVEL <span id="txt-lvl">1</span> · <span id="txt-xp">0</span> / <span id="txt-xpnext">100</span> XP</div>
+      </div>
+    </div>
+    <div class="panel panel-wave">
+      <div class="panel-title">ONDA</div>
+      <div id="txt-wave" class="big">1</div>
+      <div id="txt-enemies">Inimigos: 0</div>
+    </div>
+    <div class="panel panel-ammo">
+      <div id="txt-weapon">Glock 17</div>
+      <div id="txt-ammo"><span id="ammo-mag">17</span> <span class="slash">/</span> <span id="ammo-res">170</span></div>
+      <div class="reload-wrap" id="reloadWrap" style="display:none">
+        <div class="reload-bar"><div id="fill-reload" class="reload-fill"></div></div>
+        <div id="txt-reload">RECARREGANDO</div>
+      </div>
+    </div>
+    <div class="panel panel-health">
+      <div class="panel-title">VIDA</div>
+      <div class="bar"><div id="fill-hp" class="fill"></div></div>
+      <div id="txt-hp">100</div>
+    </div>
+    <div id="crosshair">
+      <div class="ch line t"></div><div class="ch line b"></div><div class="ch line l"></div><div class="ch line r"></div><div class="ch dot"></div>
+    </div>
+    <div id="hitmarker"></div>
+    <div id="damage-numbers"></div>
+    <div id="killfeed"></div>
+    <div id="txt-cash" class="cash">$0</div>
+  </div>
+
+  <!-- Menus / sobreposições -->
+  <div id="overlay" class="layer hidden"></div>
+
+  <div id="menuMain" class="menu">
+    <div class="menu-inner">
+      <div class="logo">ZONA DE<br>CONFLITO</div>
+      <div class="tagline">60 armas · 50 inimigos · ranqueamento · recarga tática</div>
+      <div class="menu-stats">
+        <div><strong id="mRank">Ferro I</strong><span>Patente</span></div>
+        <div><strong id="mKills">0</strong><span>Eliminações</span></div>
+        <div><strong id="mWave">0</strong><span>Onda máxima</span></div>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-big" onclick="game.startGame()">INICIAR SOBREVIVÊNCIA</button>
+        <button class="btn" onclick="ui.show('loadout')">ARMAS &amp; LOADOUT</button>
+        <button class="btn" onclick="ui.show('leaderboard')">RANKING</button>
+        <button class="btn" onclick="ui.show('credits')">CRÉDITOS</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menuPause" class="menu hidden">
+    <div class="menu-inner">
+      <div class="logo">PAUSA</div>
+      <div class="buttons">
+        <button class="btn btn-big" onclick="game.resume()">CONTINUAR</button>
+        <button class="btn" onclick="ui.show('loadout')">ARMAS &amp; LOADOUT</button>
+        <button class="btn" onclick="ui.show('leaderboard')">RANKING</button>
+        <button class="btn btn-outline" onclick="game.backToMenu()">SAIR PARA O MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menuGameOver" class="menu hidden">
+    <div class="menu-inner">
+      <div class="logo bad">DERROTA</div>
+      <div class="summary">
+        <div><strong>Onda:</strong> <span id="goWave">1</span></div>
+        <div><strong>Eliminações:</strong> <span id="goKills">0</span></div>
+        <div><strong>Score:</strong> <span id="goScore">0</span></div>
+        <div><strong>Patente:</strong> <span id="goRank">Ferro I</span></div>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-big" onclick="game.startGame()">JOGAR NOVAMENTE</button>
+        <button class="btn" onclick="game.backToMenu()">MENU PRINCIPAL</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menuLoadout" class="menu panel-menu hidden">
+    <div class="menu-inner">
+      <div class="loadout-header">
+        <h2>ARMAS &amp; LOADOUT</h2>
+        <div class="loadout-cash">Dinheiro: <span id="lCash">$0</span></div>
+      </div>
+      <div class="slots">
+        <div class="slot-label">SLOTS EQUIPADOS (1–6)</div>
+        <div id="slotsContainer" class="slots-container"></div>
+      </div>
+      <div class="arsenal">
+        <div class="arsenal-title">ARSENAL (60 ARMAS)</div>
+        <div id="arsenalList" class="arsenal-list"></div>
+      </div>
+      <div class="buttons" style="justify-content:center">
+        <button class="btn btn-outline" onclick="ui.show('main')">VOLTAR</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menuLeaderboard" class="menu panel-menu hidden">
+    <div class="menu-inner">
+      <h2>RANKING — TOP JOGADORES</h2>
+      <div id="lbList" class="lb-list"></div>
+      <div class="buttons" style="justify-content:center">
+        <button class="btn btn-outline" onclick="ui.show('main')">VOLTAR</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menuCredits" class="menu panel-menu hidden">
+    <div class="menu-inner">
+      <h2>CRÉDITOS</h2>
+      <p>Zona de Conflito — FPS de sobrevivência em arena.</p>
+      <p>Recursos: Three.js (vendido em vendor/three.module.js). Áudio procedural via Web Audio API.</p>
+      <p>Controles: WASD mover · Shift correr · Mouse mirar/atirar · R recarregar · 1–6 trocar arma · ESC pausa</p>
+      <div class="buttons" style="justify-content:center">
+        <button class="btn btn-outline" onclick="ui.show('main')">VOLTAR</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="msgCenter" class="msg-center"></div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="fps.js"></script>
+</body>
+</html>
