@@ -276,35 +276,46 @@ $("#copyBtn").addEventListener("click", async () => {
 $("#today").textContent = new Date().toLocaleDateString("pt-BR");
 
 /* ============================================================
-   DOWNLOAD DO PDF (com fallback por Blob)
+   DOWNLOAD (ZIP e PDF) com fallback por Blob
    ============================================================ */
 (function () {
-  const btn = document.getElementById("downloadBtn");
-  if (!btn) return;
   const note = document.getElementById("dlNote");
-  const FILE = "NUCLEO-ZERO-prompt.pdf";
 
-  async function blobDownload() {
-    const res = await fetch("download", { cache: "no-store" });
+  function say(html) {
+    if (note) note.innerHTML = html;
+  }
+
+  async function blobDownload(url, filename) {
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
+    if (blob.size < 1000) throw new Error("arquivo vazio");
+    const obj = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
-    a.download = FILE;
+    a.href = obj;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    setTimeout(() => URL.revokeObjectURL(obj), 5000);
+    return blob.size;
   }
 
-  btn.addEventListener("click", async (ev) => {
-    try {
-      await blobDownload();
-      if (note) note.innerHTML = "Download iniciado — confira a pasta de downloads do navegador.";
-    } catch (err) {
-      // deixa o navegador seguir o link normal (href="download")
-      if (note) note.innerHTML = "Não foi possível baixar por aqui. Use o botão <b>Abrir no GitHub</b> e clique em “Download raw file”.";
-    }
-  });
+  function wire(id, url, filename, label) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.addEventListener("click", async (ev) => {
+      ev.preventDefault();
+      try {
+        const size = await blobDownload(url, filename);
+        say(`Download de <b>${filename}</b> iniciado (${Math.round(size / 1024)} KB). Confira a pasta de downloads.`);
+      } catch (err) {
+        // segue o link normal do botão
+        say(`Não foi possível baixar por aqui. Use o botão <b>ZIP no GitHub</b> ou abra <a href="${url}" download>${label}</a> com o botão direito → “Salvar link como…”`);
+        window.location.href = url;
+      }
+    });
+  }
+
+  wire("zipBtn", "zip", "NUCLEO-ZERO-pacote.zip", "o ZIP");
 })();

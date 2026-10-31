@@ -11,6 +11,7 @@ Prompt mestre + documento de design (GDD) para um **FPS 3D em pixel art** com ra
 | `app.js` | Renderiza tabelas, filtros, tooltips e o botão de copiar |
 | `data.js` | **Fonte única de verdade**: 60 armas, 50 inimigos, 7 tiers, 8 mecânicas de recarga, 8 regras de arte |
 | `PROMPT.md` | Prompt mestre completo, com as tabelas geradas, regras de balanceamento e fases de entrega |
+| `NUCLEO-ZERO-pacote.zip` | **ZIP pronto para baixar**: PDF + PROMPT.md + data.js + os arquivos da página + geradores |
 | `NUCLEO-ZERO-prompt.pdf` | **PDF de 24 páginas pronto para baixar/imprimir**: capa, sumário, prompt completo, ficha das 60 armas e bestiário em paisagem, ranque, recarga, arte e fases |
 | `build.cjs` | Regenera as tabelas do `PROMPT.md` a partir do `data.js` (`node build.cjs`) |
 | `make_pdf.py` | Regenera o PDF a partir do `data.js` (`pip install fpdf2 && python3 make_pdf.py`) |
@@ -22,6 +23,21 @@ Basta abrir `index.html` no navegador — não há dependências nem build. Para
 
 ```bash
 npx serve .        # ou: python3 -m http.server 8000
+```
+
+## Download em ZIP
+
+`NUCLEO-ZERO-pacote.zip` (~657 KB) traz tudo: o PDF de 24 páginas, o prompt em Markdown, os dados das 60 armas e 50 inimigos, a página HTML e os scripts que regeneram PDF/tabelas.
+
+- Página do projeto: botão **“↓ Baixar ZIP com o PDF”**
+- Link direto: <https://github.com/jk-jhon1/teste-permissao-xyz/raw/arena/b1be692c-teste-permissao-xyz/fps-prompt/NUCLEO-ZERO-pacote.zip>
+- Servindo localmente: `python3 serve.py` → `/zip` (ZIP) e `/download` (PDF)
+
+Para recriar o ZIP depois de editar algo:
+
+```bash
+cd fps-prompt && zip -9 NUCLEO-ZERO-pacote.zip NUCLEO-ZERO-prompt.pdf PROMPT.md README.md data.js \
+  index.html styles.css app.js build.cjs make_pdf.py serve.py cover.png
 ```
 
 ## PDF para download
