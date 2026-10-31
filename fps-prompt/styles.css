@@ -320,3 +320,13 @@ pre.code{
   font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
   padding:7px 10px;border-top:1px solid var(--line);background:#0c1019;
 }
+
+/* ---------------- CTA DE DOWNLOAD ---------------- */
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:0 0 22px}
+.btn-dl{
+  display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--amber);color:#0b0d14;padding:11px 18px;font-weight:700;
+  border:2px solid var(--amber);box-shadow:4px 4px 0 rgba(232,185,63,.22);
+}
+.btn-dl:hover{background:#f6cd5e;border-color:#f6cd5e;text-decoration:none;transform:translate(-1px,-1px);box-shadow:6px 6px 0 rgba(232,185,63,.25)}
+.cta-note{font-size:11.5px;color:var(--muted);max-width:44ch;line-height:1.5}

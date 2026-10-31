@@ -11,7 +11,10 @@ Prompt mestre + documento de design (GDD) para um **FPS 3D em pixel art** com ra
 | `app.js` | Renderiza tabelas, filtros, tooltips e o botão de copiar |
 | `data.js` | **Fonte única de verdade**: 60 armas, 50 inimigos, 7 tiers, 8 mecânicas de recarga, 8 regras de arte |
 | `PROMPT.md` | Prompt mestre completo, com as tabelas geradas, regras de balanceamento e fases de entrega |
+| `NUCLEO-ZERO-prompt.pdf` | **PDF de 24 páginas pronto para baixar/imprimir**: capa, sumário, prompt completo, ficha das 60 armas e bestiário em paisagem, ranque, recarga, arte e fases |
 | `build.cjs` | Regenera as tabelas do `PROMPT.md` a partir do `data.js` (`node build.cjs`) |
+| `make_pdf.py` | Regenera o PDF a partir do `data.js` (`pip install fpdf2 && python3 make_pdf.py`) |
+| `cover.png` | Arte-alvo usada na capa do PDF e no topo do documento HTML |
 
 ## Rodar
 
@@ -19,6 +22,15 @@ Basta abrir `index.html` no navegador — não há dependências nem build. Para
 
 ```bash
 npx serve .        # ou: python3 -m http.server 8000
+```
+
+## PDF para download
+
+O arquivo **`NUCLEO-ZERO-prompt.pdf`** (24 páginas) concentra o prompt mestre e o documento de design: capa, sumário com páginas, contexto, pilares, ficha das 60 armas e bestiário dos 50 inimigos em tabelas paisagem, sistema de recarga, ranqueamento, biomas, direção de arte e fases de entrega. Para regerar depois de editar `data.js`:
+
+```bash
+python3 -m pip install fpdf2
+python3 make_pdf.py
 ```
 
 ## Conteúdo do jogo proposto
