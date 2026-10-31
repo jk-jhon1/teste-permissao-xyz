@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NÚCLEO ZERO — Prompt + GDD de FPS 3D pixelado</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="scanlines"></div>
+  <div class="wrap">
+    <p class="eyebrow">// PACOTE DE PRODUÇÃO · v1.0</p>
+    <h1>NÚCLEO ZERO<span class="cursor">_</span></h1>
+    <p class="sub">Prompt mestre + documento de design para um <strong>FPS 3D pixelado</strong> com
+      <strong>60 armas</strong>, <strong>50 inimigos</strong>, sistema de recarga profundo e
+      <strong>ranqueamento competitivo em 7 tiers</strong>.</p>
+    <figure class="cover">
+      <img src="cover.png" alt="Arte-alvo de NÚCLEO ZERO: FPS 3D pixelado em arena de docas, arma em primeira pessoa com pente na mão, HUD bitmap de munição e minimapa">
+      <figcaption>Arte-alvo · render interno 480×270 · upscale nearest · paleta de 24 cores</figcaption>
+    </figure>
+    <ul class="tags">
+      <li>FPS 3D</li><li>Pixel art</li><li>60 armas</li><li>50 inimigos</li>
+      <li>7 ranques</li><li>8 tipos de recarga</li><li>6 biomas</li>
+    </ul>
+    <nav class="tabs" id="tabs">
+      <a href="#prompt">Prompt</a>
+      <a href="#armas">Armas</a>
+      <a href="#inimigos">Inimigos</a>
+      <a href="#ranque">Ranque</a>
+      <a href="#recarga">Recarga</a>
+      <a href="#arte">Arte</a>
+      <a href="#escopo">Escopo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ PROMPT ============ -->
+  <section id="prompt" class="block">
+    <div class="block-head">
+      <h2><span class="num">01</span> Prompt mestre</h2>
+      <p class="lead">Versão resumida, pronta para colar em um agente de código ou gerador de jogos.
+        A versão completa (com todas as tabelas e critérios de aceite) está em <code>PROMPT.md</code>.</p>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="file">prompt-nucleo-zero.txt</span>
+        <button id="copyBtn" class="btn">Copiar prompt</button>
+      </div>
+<pre id="promptText">Crie um FPS 3D em pixel art chamado NÚCLEO ZERO.
+
+OBJETIVO
+Jogo de tiro em primeira pessoa, 3D, com estética pixel art (low-poly + texturas
+pixeladas, render interno em baixa resolução com upscale nearest-neighbor), foco em
+partidas rápidas 5v5 e progressão ranqueada. Deve rodar a 60 FPS em máquina modesta
+e no navegador (WebGL), com build desktop opcional.
+
+PILARES
+1. Leitura clara: silhuetas, cores e animações fazem o jogador entender tudo sem HUD.
+2. Toda arma recarrega de forma diferente e a recarga é uma decisão tática, não espera.
+3. Progressão honesta: ranque reflete habilidade, não tempo jogado.
+4. 60 armas e 50 inimigos, todos com papel claro — nenhum é "reskin com número maior".
+
+SISTEMAS OBRIGATÓRIOS
+A. ARSENAL — 60 armas em 9 famílias (10 pistolas, 8 SMGs, 10 rifles, 7 escopetas,
+   7 precisão, 4 metralhadoras, 4 explosivos, 6 de energia, 4 corpo a corpo). Cada arma
+   precisa de: dano, cadência (RPM), pente, reserva, tempo de recarga, tempo de recarga
+   tática, precisão, mobilidade, alcance, recuo, desbloqueio por ranque e nota de design.
+   Perfis devem ser distintos: nenhuma arma pode dominar todas as faixas.
+B. RECARGA — 8 mecânicas: recarga completa, recarga tática (+1 na câmara, mais rápida),
+   recarga de emergência (descarta o pente restante), recarga ativa com timing (janela
+   perfeita = -25% de tempo e +15% de cadência por 3s), cancelamento por troca de arma
+   (progresso salvo por 6s), recarga em movimento por classe, overheat para armas de
+   energia e recarga bago-a-bago para escopetas/revólveres. Cada arma tem animação
+   própria de recarga, alinhada ao som e ao momento em que a munição realmente entra.
+C. INIMIGOS — 50 tipos em 6 famílias: Infantaria (12), Precisão (8), Pesado/Blindado (8),
+   Mutante (8), Drone (8) e Chefe (6). Cada um com vida, dano, velocidade, bioma,
+   comportamento de IA legível (telegrafia, janelas de vulnerabilidade) e fraqueza.
+   Inclua 1 chefe final que usa as 60 armas do jogo.
+D. RANQUE — 7 tiers (Bronze, Prata, Ouro, Platina, Diamante, Mestre, Lendário), Bronze→
+   Mestre com 3 divisões. RP por kill/assistência/objetivo/resultado/MVP, penalidade por
+   abandono, 5 partidas de colocação, MMR escondido para matchmaking, decaimento por
+   inatividade a partir de Diamante, proteção de queda de divisão e reset suave por
+   temporada. Proibido ranque por tempo de jogo ou loot boxes de vantagem.
+E. CONTEÚDO — 6 biomas (Docas, Ferro-Velho, Refinaria, Estufa, Cristal, Órbita) e
+   4 modos: Escolta, Domínio, Eliminação e Sobrevivência (PvE por ondas).
+
+ESTÉTICA 3D PIXELADA
+Resolução interna 480x270 com upscale point-filter; modelos low-poly com texturas de
+32–64px; paleta de no máximo 24 cores por bioma; iluminação flat com vertex color e
+sombras em blocos; animação de personagens a 12–18 FPS (stepped) e câmera a 60 FPS;
+partículas quadradas, hitmarker de 3px, fonte bitmap; HUD pixelado em escala inteira.
+Sem motion blur, sem bloom, sem filtro de suavização. Opções de acessibilidade:
+alto contraste, escala de HUD e remapeamento total de teclas.
+
+TÉCNICO
+Three.js + Vite (ou Godot 4, se preferir) com:
+- armas e inimigos em arquivos de dados (JSON/JS) separados da lógica;
+- máquina de estados para cada arma (idle, fire, reload_tactical, reload_empty,
+  overheat, swap) com eventos de animação e som;
+- IA por comportamento (patrulha, combate, flanco, cobertura, retirada) em vez de
+  scripts únicos por inimigo;
+- sistema de ranque isolado em módulo testável (função pura de cálculo de RP);
+- save local + servidor de perfil opcional;
+- acessibilidade e configuração gráfica desde o primeiro commit.
+
+CRITÉRIOS DE ACEITE
+- As 60 armas e os 50 inimigos existem em dados, são carregados e aparecem na galeria.
+- Cada arma recarrega com animação e som próprios; cancelamento e recarga tática
+  funcionam conforme a especificação.
+- Matar, morrer, vencer e abandonar alteram o RP conforme a tabela; o tier muda em tempo real.
+- 60 FPS estáveis na cena de teste com 20 inimigos simultâneos.
+- Estética 3D pixelada visível: sem suavização, paleta limitada, sombras em blocos.
+
+ENTREGA
+Primeiro a estrutura do projeto, o schema de dados das armas e inimigos e uma cena
+jogável de tiro ao alvo com 3 armas. Depois os sistemas de recarga e ranque. Depois
+conteúdo (armas, inimigos, mapas). Sempre rodando ao final de cada etapa.</pre>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Como usar este prompt</h3>
+        <ol class="steps">
+          <li><strong>Etapa 1 — fundação:</strong> "Implemente a etapa 1 do prompt: projeto, schema de dados e cena de tiro ao alvo com 3 armas."</li>
+          <li><strong>Etapa 2 — recarga:</strong> "Implemente as 8 mecânicas de recarga com máquina de estados e HUD de munição."</li>
+          <li><strong>Etapa 3 — ranque:</strong> "Implemente o cálculo de RP, tiers, colocações e decaimento, com tela de progresso."</li>
+          <li><strong>Etapa 4 — conteúdo:</strong> "Popule as 60 armas e os 50 inimigos a partir dos dados do documento."</li>
+          <li><strong>Etapa 5 — arte:</strong> "Aplique a direção de arte 3D pixelada e o passe de feedback (juice)."</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Regras para não sair do escopo</h3>
+        <ul class="neg">
+          <li>Não usar assets realistas, PBR ou pós-processamento pesado.</li>
+          <li>Não criar arma genérica "melhor em tudo" — toda arma tem um custo.</li>
+          <li>Não transformar ranque em XP por tempo jogado.</li>
+          <li>Não vender vantagem competitiva; só cosmético.</li>
+          <li>Não usar recarga como tempo morto: sempre há uma decisão (tática, cancelar, trocar).</li>
+          <li>Não deixar inimigo sem telegrafia: nada de dano impossível de prever.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ARMAS ============ -->
+  <section id="armas" class="block">
+    <div class="block-head">
+      <h2><span class="num">02</span> Arsenal — 60 armas</h2>
+      <p class="lead">Dano por projétil/bago, cadência em RPM, pente, reserva, recarga em segundos
+        (completa / tática), precisão e mobilidade de 0 a 100. Filtre por família ou busque pelo nome.</p>
+    </div>
+    <div class="controls">
+      <input id="wSearch" type="search" placeholder="Buscar arma, munição ou nota…" aria-label="Buscar arma">
+      <div class="chips" id="wChips"></div>
+      <span class="count" id="wCount"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="data" id="wTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>Arma</th><th>Família</th><th>Munição</th><th class="n">Dano</th>
+            <th class="n">RPM</th><th class="n">Pente</th><th class="n">Reserva</th>
+            <th class="n">Recarga</th><th class="n">Tática</th><th class="n">Prec.</th>
+            <th class="n">Mob.</th><th>Desbloqueio</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="hint">Passe o mouse (ou toque) em uma linha para ver a nota de design da arma.</p>
+  </section>
+
+  <!-- ============ INIMIGOS ============ -->
+  <section id="inimigos" class="block">
+    <div class="block-head">
+      <h2><span class="num">03</span> Bestiário — 50 inimigos</h2>
+      <p class="lead">Seis famílias, seis biomas. Todo inimigo tem comportamento legível,
+        janela de vulnerabilidade e fraqueza clara.</p>
+    </div>
+    <div class="controls">
+      <input id="eSearch" type="search" placeholder="Buscar inimigo, bioma ou IA…" aria-label="Buscar inimigo">
+      <div class="chips" id="eChips"></div>
+      <span class="count" id="eCount"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="data" id="eTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>Inimigo</th><th>Família</th><th>Bioma</th>
+            <th class="n">Vida</th><th class="n">Dano</th><th>Velocidade</th>
+            <th>Comportamento</th><th>Fraqueza</th><th class="n">RP</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ RANQUE ============ -->
+  <section id="ranque" class="block">
+    <div class="block-head">
+      <h2><span class="num">04</span> Ranqueamento</h2>
+      <p class="lead">Sete tiers, RP transparente e matchmaking por MMR escondido.
+        O ranque mede habilidade — nunca tempo jogado.</p>
+    </div>
+    <div class="ranks" id="ranks"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Ganho e perda de RP</h3>
+        <table class="mini">
+          <tbody>
+            <tr><td>Vitória</td><td class="pos">+25 RP</td></tr>
+            <tr><td>Derrota</td><td class="neg2">−20 RP</td></tr>
+            <tr><td>Eliminação</td><td class="pos">+2 RP</td></tr>
+            <tr><td>Assistência</td><td class="pos">+1 RP</td></tr>
+            <tr><td>Objetivo cumprido / captura</td><td class="pos">+5 RP</td></tr>
+            <tr><td>MVP da partida</td><td class="pos">+8 RP</td></tr>
+            <tr><td>Sequência de 5 eliminações</td><td class="pos">+3 RP</td></tr>
+            <tr><td>Abandono / AFK</td><td class="neg2">−30 RP + fila de 15 min</td></tr>
+            <tr><td>Bônus de dupla acima do MMR</td><td class="pos">+10% (limitado)</td></tr>
+            <tr><td>Desempenho muito abaixo do MMR</td><td class="neg2">até −5 RP extra</td></tr>
+          </tbody>
+        </table>
+        <p class="small">Fórmula: <code>RP = base(resultado) + desempenho + objetivo + bônus − penalidade</code>,
+          com ajuste de ±30% pelo MMR (você ganha mais vencendo alguém mais forte).</p>
+      </div>
+      <div class="card">
+        <h3>Regras competitivas</h3>
+        <ul class="check">
+          <li><strong>Colocação:</strong> 5 partidas definem o tier inicial (máximo Ouro III).</li>
+          <li><strong>Divisões:</strong> Bronze→Mestre têm III, II e I (3 divisões). Lendário é faixa única com leaderboard.</li>
+          <li><strong>Proteção de divisão:</strong> você não cai de divisão nas 2 primeiras derrotas após subir.</li>
+          <li><strong>Decaimento:</strong> a partir de Diamante, −25 RP por semana sem jogar (máx. 1 tier).</li>
+          <li><strong>Reset de temporada:</strong> suave — cai no máximo 1 tier e 5 partidas de recolocação.</li>
+          <li><strong>Antiabuso:</strong> MMR separado do RP; grupos com diferença acima de 2 tiers bloqueados.</li>
+          <li><strong>Recompensa:</strong> só cosmético (skins pixeladas, viseiras, títulos) + acesso a torneios.</li>
+          <li><strong>Transparência:</strong> tela pós-partida mostra exatamente de onde veio cada RP.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RECARGA ============ -->
+  <section id="recarga" class="block">
+    <div class="block-head">
+      <h2><span class="num">05</span> Sistema de recarga</h2>
+      <p class="lead">Oito mecânicas que transformam a recarga em decisão tática — não em tempo morto.</p>
+    </div>
+    <div class="reload-grid" id="reloadGrid"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Máquina de estados da arma</h3>
+        <pre class="code">IDLE
+ ├─ fire + munição &gt; 0 .............. FIRE → IDLE
+ ├─ fire + munição = 0 .............. EMPTY (clique seco, +0,15s)
+ ├─ R (pente &gt; 0) .................. RELOAD_TACTICAL
+ ├─ R (pente = 0) .................. RELOAD_FULL
+ ├─ R R (duplo toque) .............. RELOAD_EMERGENCY
+ ├─ troca de arma .................. SWAP (salva progresso 6s)
+ └─ calor 100% (energia) ........... OVERHEAT (1,8–2,6s)
+
+RELOAD_*: checkpoints de animação
+  0.0s — arma abaixa, som de pente saindo
+  0.6s — pente novo entra  ◀ janela de "active reload"
+  1.0s — ferrolho / câmara
+  fim  — munição creditada AQUI (não no início)</pre>
+      </div>
+      <div class="card">
+        <h3>Regras de ouro</h3>
+        <ul class="check">
+          <li><strong>Munição entra no fim:</strong> cancelar após o checkpoint do pente concede a munição, cancelar antes não.</li>
+          <li><strong>Sempre cancelável</strong>, exceto recarga de emergência (compromisso total).</li>
+          <li><strong>Recarga salva por 6s</strong> ao trocar de arma — recompensa gestão de dois slots.</li>
+          <li><strong>Feedback total:</strong> som próprio por arma, barra segmentada, tremor de câmera de 1 px na finalização.</li>
+          <li><strong>Sem recarga "grátis":</strong> não existe perk que zere o tempo; só reduz até 20%.</li>
+          <li><strong>Legibilidade:</strong> inimigos também recarregam — e essa é a janela de ataque do jogador.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ARTE ============ -->
+  <section id="arte" class="block">
+    <div class="block-head">
+      <h2><span class="num">06</span> Direção de arte 3D pixelada</h2>
+      <p class="lead">3D de verdade, pixel art de verdade: geometria low-poly, texturas pequenas,
+        render interno em baixa resolução e zero suavização.</p>
+    </div>
+    <div class="art-grid" id="artGrid"></div>
+
+    <div class="palette card">
+      <h3>Paleta base (exemplo de bioma Docas)</h3>
+      <div class="swatches">
+        <span style="--c:#10121a">#10121a</span><span style="--c:#1d2233">#1d2233</span>
+        <span style="--c:#2c3550">#2c3550</span><span style="--c:#41507a">#41507a</span>
+        <span style="--c:#5f79a8">#5f79a8</span><span style="--c:#8fb3d9">#8fb3d9</span>
+        <span style="--c:#cfe4f2">#cfe4f2</span><span style="--c:#e8b93f">#e8b93f</span>
+        <span style="--c:#d4623c">#d4623c</span><span style="--c:#8b3a3a">#8b3a3a</span>
+        <span style="--c:#3f8f6a">#3f8f6a</span><span style="--c:#ff6b8b">#ff6b8b</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ESCOPO ============ -->
+  <section id="escopo" class="block">
+    <div class="block-head">
+      <h2><span class="num">07</span> Escopo, biomas e critérios de aceite</h2>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>6 biomas × 2 mapas</h3>
+        <ul class="biomas">
+          <li><b>Docas</b><span>Contêineres, água rasa, guindastes. Verticalidade média.</span></li>
+          <li><b>Ferro-Velho</b><span>Ferramentas, sucata, corredores estreitos. Emboscada.</span></li>
+          <li><b>Refinaria</b><span>Tanques, passarelas, fogo. Áreas abertas perigosas.</span></li>
+          <li><b>Estufa</b><span>Vegetação densa, névoa de esporos. Visibilidade curta.</span></li>
+          <li><b>Cristal</b><span>Cavernas refletivas, vãos verticais. Precisão e luz.</span></li>
+          <li><b>Órbita</b><span>Estação espacial, gravidade baixa em setores. Simetria competitiva.</span></li>
+        </ul>
+        <h3 class="mt">4 modos</h3>
+        <ul class="check">
+          <li><strong>Escolta</strong> 5v5 — carga móvel em 3 pontos.</li>
+          <li><strong>Domínio</strong> 5v5 — três zonas, placar por tempo.</li>
+          <li><strong>Eliminação</strong> 5v5 — rounds de 90s, sem respawn.</li>
+          <li><strong>Sobrevivência</strong> PvE — 12 ondas usando o bestiário completo.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Critérios de aceite (testáveis)</h3>
+        <ul class="check" id="accept">
+          <li>As 60 armas e os 50 inimigos carregam de arquivos de dados e aparecem numa galeria navegável.</li>
+          <li>Cada uma das 8 mecânicas de recarga funciona conforme a tabela e é demonstrável na tela de treino.</li>
+          <li>Cancelar a recarga após o checkpoint do pente concede a munição; antes, não.</li>
+          <li>Vitória, derrota, abandono e MVP alteram o RP exatamente conforme a tabela; o tier atualiza em tempo real.</li>
+          <li>5 partidas de colocação definem o ranque; decaimento só a partir de Diamante.</li>
+          <li>60 FPS estáveis com 20 inimigos simultâneos na cena de teste.</li>
+          <li>Estética verificável: render interno em 480×270, upscale nearest, paleta limitada, sombras em blocos.</li>
+          <li>Todo inimigo tem telegrafia visível antes de causar dano alto.</li>
+          <li>Acessibilidade: remapeamento de teclas, escala de HUD, alto contraste e opção de reduzir screen shake.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>Stack sugerida e estrutura de projeto</h3>
+      <div class="grid-2 inner">
+        <pre class="code">nucleo-zero/
+├─ index.html
+├─ src/
+│  ├─ main.js            # bootstrap, loop, cenas
+│  ├─ engine/            # render pixelado, input, áudio
+│  ├─ systems/
+│  │  ├─ weaponState.js  # máquina de estados + recarga
+│  │  ├─ damage.js
+│  │  ├─ ai.js           # comportamentos de inimigo
+│  │  └─ rank.js         # RP/MMR (funções puras + testes)
+│  ├─ data/
+│  │  ├─ weapons.js      # 60 armas
+│  │  ├─ enemies.js      # 50 inimigos
+│  │  └─ maps.js         # 6 biomas × 2 mapas
+│  ├─ ui/                # HUD pixelado, menus, tela de ranque
+│  └─ art/               # modelos low-poly, texturas 32–64px
+└─ tests/</pre>
+        <ul class="check">
+          <li><strong>Three.js + Vite</strong> (navegador primeiro, build desktop depois).</li>
+          <li>Alternativa: <strong>Godot 4</strong> com viewport 480×270 e filtro nearest.</li>
+          <li>Dados separados da lógica — armas e inimigos são conteúdo, não código.</li>
+          <li>Testes unitários em <code>rank.js</code> e <code>weaponState.js</code>.</li>
+          <li>Áudio: passos, recarga e tiro com som único por família de arma.</li>
+          <li>Orçamento: 1 draw call por material compartilhado, atlas de textura único por bioma.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap foot">
+  <p>NÚCLEO ZERO — pacote de produção gerado em <span id="today"></span>.Documento de design + prompt mestre.
+    Arquivos: <code>PROMPT.md</code> (prompt completo), <code>data.js</code> (dados das armas e inimigos),
+    <code>index.html</code> / <code>styles.css</code> / <code>app.js</code> (este documento).</p>
+</footer>
+
+<div id="tip" class="tip" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
