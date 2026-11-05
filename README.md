@@ -21,7 +21,7 @@ O Apps Script grava cinco campos anônimos e não coleta nome, e-mail, telefone 
 
 ## Dados e rigor da investigação
 
-O dashboard vem com **56 respostas sintéticas, apenas para demonstração**. Elas não são respostas de pessoas reais e não devem ser apresentadas como pesquisa concluída. Para cumprir a coleta descrita no guia, obtenha pelo menos 20 respostas reais com consentimento, sem nome/e-mail/telefone e sem coletar dados desnecessários. Depois, use **Importar CSV** para carregar as respostas anônimas.
+O dashboard inicia com os **27 registros anônimos do CSV fornecido** e exibe uma conclusão calculada a partir deles. A origem dos registros não é verificada pelo site: use a análise somente com a coleta real e consentida. Para cumprir a coleta descrita no guia, obtenha pelo menos 20 respostas reais com consentimento, sem nome/e-mail/telefone e sem coletar dados desnecessários. Depois, use **Importar CSV** para carregar outra base anônima.
 
 O CSV deve conter exatamente estas colunas: `serie,verificou_fonte,identificou_sinais,acao`. Valores aceitos:
 
