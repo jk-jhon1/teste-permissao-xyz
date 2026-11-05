@@ -1,22 +1,37 @@
-const sampleData = [
-  ['1ª série','Sim','Sim','Conferir a fonte'],['1ª série','Sim','Sim','Não compartilhar'],['1ª série','Sim','Sim','Perguntar a alguém'],['1ª série','Sim','Não','Conferir a fonte'],['1ª série','Sim','Sim','Conferir a fonte'],['1ª série','Sim','Sim','Não compartilhar'],['1ª série','Sim','Não','Perguntar a alguém'],['1ª série','Sim','Sim','Conferir a fonte'],
-  ['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Sim','Perguntar a alguém'],['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Não compartilhar'],['1ª série','Não','Sim','Conferir a fonte'],['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Perguntar a alguém'],['1ª série','Não','Sim','Não compartilhar'],
-  ['2ª série','Sim','Sim','Conferir a fonte'],['2ª série','Sim','Sim','Perguntar a alguém'],['2ª série','Sim','Não','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],
-  ['2ª série','Não','Não','Compartilhar'],['2ª série','Não','Não','Perguntar a alguém'],
-  ['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Não','Sim','Não compartilhar'],
-  // Registros sintéticos extras para demonstrar a variação nos filtros e gráficos.
-  ['1ª série','Sim','Sim','Não compartilhar'],['1ª série','Sim','Sim','Conferir a fonte'],['1ª série','Sim','Não','Perguntar a alguém'],['1ª série','Sim','Sim','Perguntar a alguém'],['1ª série','Sim','Sim','Não compartilhar'],
-  ['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Perguntar a alguém'],['1ª série','Não','Sim','Não compartilhar'],['1ª série','Não','Não','Compartilhar'],['1ª série','Não','Não','Conferir a fonte'],
-  ['2ª série','Sim','Sim','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],['2ª série','Sim','Sim','Perguntar a alguém'],['2ª série','Sim','Não','Conferir a fonte'],['2ª série','Sim','Sim','Não compartilhar'],['2ª série','Sim','Sim','Conferir a fonte'],
-  ['2ª série','Não','Não','Compartilhar'],['2ª série','Não','Sim','Perguntar a alguém'],['2ª série','Não','Não','Compartilhar'],['2ª série','Não','Não','Não compartilhar'],['2ª série','Não','Sim','Conferir a fonte'],
-  ['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Sim','Sim','Perguntar a alguém'],['3ª série','Sim','Não','Não compartilhar'],['3ª série','Sim','Sim','Conferir a fonte'],['3ª série','Sim','Sim','Não compartilhar'],['3ª série','Sim','Sim','Perguntar a alguém'],
-  ['3ª série','Não','Não','Compartilhar'],['3ª série','Não','Sim','Não compartilhar'],['3ª série','Não','Não','Perguntar a alguém'],['3ª série','Não','Não','Compartilhar'],['3ª série','Não','Sim','Conferir a fonte']
+const researchData = [
+  ["3ª série", "Sim", "Não", "Não compartilhar"],
+  ["2ª série", "Não", "Não", "Conferir a fonte"],
+  ["1ª série", "Sim", "Sim", "Conferir a fonte"],
+  ["3ª série", "Não", "Sim", "Compartilhar"],
+  ["3ª série", "Sim", "Sim", "Perguntar a alguém"],
+  ["2ª série", "Não", "Sim", "Não compartilhar"],
+  ["1ª série", "Sim", "Sim", "Não compartilhar"],
+  ["1ª série", "Sim", "Sim", "Conferir a fonte"],
+  ["3ª série", "Não", "Não", "Não compartilhar"],
+  ["3ª série", "Sim", "Não", "Compartilhar"],
+  ["2ª série", "Não", "Sim", "Compartilhar"],
+  ["2ª série", "Sim", "Sim", "Compartilhar"],
+  ["2ª série", "Sim", "Não", "Não compartilhar"],
+  ["3ª série", "Sim", "Sim", "Perguntar a alguém"],
+  ["3ª série", "Não", "Não", "Perguntar a alguém"],
+  ["3ª série", "Não", "Não", "Não compartilhar"],
+  ["1ª série", "Não", "Sim", "Compartilhar"],
+  ["1ª série", "Sim", "Sim", "Não compartilhar"],
+  ["1ª série", "Não", "Sim", "Conferir a fonte"],
+  ["1ª série", "Não", "Não", "Conferir a fonte"],
+  ["3ª série", "Sim", "Sim", "Não compartilhar"],
+  ["2ª série", "Não", "Sim", "Compartilhar"],
+  ["2ª série", "Não", "Sim", "Não compartilhar"],
+  ["3ª série", "Sim", "Sim", "Compartilhar"],
+  ["1ª série", "Sim", "Não", "Compartilhar"],
+  ["1ª série", "Não", "Não", "Compartilhar"],
+  ["1ª série", "Sim", "Sim", "Não compartilhar"],
 ].map(([serie,verificou_fonte,identificou_sinais,acao])=>({serie,verificou_fonte,identificou_sinais,acao}));
 
 const ACTIONS = ['Conferir a fonte','Perguntar a alguém','Não compartilhar','Compartilhar'];
 const ACTION_COLORS = ['#20d1c1','#158cff','#ffd05a','#59677e'];
-let data = sampleData;
-let isRealData = false;
+let data = researchData;
+let isImportedData = true;
 let toastTimer;
 let savedRowCount = null;
 let jsonpCounter = 0;
@@ -59,31 +74,90 @@ function renderActions(rows){
 }
 function renderMetrics(rows){
   const total=rows.length,detected=rows.filter(r=>r.identificou_sinais==='Sim').length,yes=rate(rows,'identificou_sinais','Sim'),no=rate(rows,'identificou_sinais','Não');
-  const gap= yes.n&&no.n ? pct(yes.yes,yes.n)-pct(no.yes,no.n):null;
+  const gap= yes.n&&no.n ? Math.round((yes.yes/yes.n-no.yes/no.n)*100):null;
   $('#metric-total').innerHTML=`${total}<span> respostas</span>`;
-  $('#metric-total-note').textContent= isRealData?'No conjunto recebido':'Amostra demonstrativa';
+  $('#metric-total-note').textContent= isImportedData?'Dados do CSV enviado':'Amostra demonstrativa';
   $('#metric-detect').innerHTML=`${fmtRate(detected,total)}<span> do grupo</span>`;
   $('#metric-gap').innerHTML=`${gap===null?'—':`${gap>0?'+':''}${gap}`}<span> p.p.</span>`;
   $('#metric-grades').innerHTML=`${new Set(rows.map(r=>r.serie)).size}<span> ${new Set(rows.map(r=>r.serie)).size===1?'série':'séries'}</span>`;
 }
+function getGradeBreakdown(rows){
+  return ['1ª série','2ª série','3ª série'].map(grade=>{
+    const checked=rows.filter(r=>r.serie===grade&&r.verificou_fonte==='Sim');
+    const unchecked=rows.filter(r=>r.serie===grade&&r.verificou_fonte==='Não');
+    const checkedYes=checked.filter(r=>r.identificou_sinais==='Sim').length;
+    const uncheckedYes=unchecked.filter(r=>r.identificou_sinais==='Sim').length;
+    return {grade,checkedN:checked.length,checkedYes,uncheckedN:unchecked.length,uncheckedYes,
+      checkedRate:pct(checkedYes,checked.length),uncheckedRate:pct(uncheckedYes,unchecked.length)};
+  }).filter(g=>g.checkedN&&g.uncheckedN);
+}
+function buildResearchConclusion(rows,y,n,gap){
+  const source=isImportedData?'CSV fornecido':'amostra de demonstração';
+  if(!y.n||!n.n)return `A ${source} contém ${rows.length} respostas neste recorte, mas faltam respostas em um dos grupos para comparar a hipótese. Aumente a coleta antes de tirar uma conclusão.`;
+  const checkedPhrase=`${y.yes} de ${y.n} que verificaram a fonte (${pct(y.yes,y.n)}%)`;
+  const uncheckedPhrase=`${n.yes} de ${n.n} que não verificaram (${pct(n.yes,n.n)}%)`;
+  let conclusion=`No ${source}, ${checkedPhrase} identificaram sinais de manipulação, contra ${uncheckedPhrase} no outro grupo — diferença de ${Math.abs(gap)} pontos percentuais.`;
+  if(selectedGrade()==='todas'){
+    const grades=getGradeBreakdown(rows);
+    if(grades.length){
+      const detail=grades.map(g=>`${g.grade}: ${g.checkedYes}/${g.checkedN} (${g.checkedRate}%) vs. ${g.uncheckedYes}/${g.uncheckedN} (${g.uncheckedRate}%)`).join('; ');
+      conclusion+=` Por série, a comparação foi: ${detail}.`;
+    }
+    const actions=ACTIONS.map(action=>({action,count:rows.filter(r=>r.acao===action).length}));
+    const notShare=actions.find(item=>item.action==='Não compartilhar')?.count||0;
+    const share=actions.find(item=>item.action==='Compartilhar')?.count||0;
+    conclusion+=` Sobre a primeira atitude, ${notShare}/${rows.length} escolheram “não compartilhar” e ${share}/${rows.length} escolheram “compartilhar”.`;
+  }
+  conclusion+=' Como são respostas autorrelatadas e os grupos por série são pequenos, o padrão não prova causalidade nem deve ser generalizado para todos os estudantes.';
+  return conclusion;
+}
 function renderInterpretation(rows){
   const y=rate(rows,'identificou_sinais','Sim'),n=rate(rows,'identificou_sinais','Não');
-  const yesP=y.n?pct(y.yes,y.n):0,noP=n.n?pct(n.yes,n.n):0,gap=yesP-noP;
+  const yesP=y.n?pct(y.yes,y.n):0,noP=n.n?pct(n.yes,n.n):0,gap=y.n&&n.n?Math.round((y.yes/y.n-n.yes/n.n)*100):0;
   const scope=selectedGrade()==='todas'?'no recorte atual':`na ${selectedGrade()}`;
-  const suffix=isRealData?'':' nesta amostra sintética';
   if(!rows.length){
     $('#finding-status').innerHTML='<span class="status-dot"></span> SEM DADOS NO RECORTE';
-    $('#finding-title').textContent='Não há respostas para este filtro.';$('#finding-text').textContent='Escolha outra série ou importe um CSV válido para explorar as evidências.';$('#comparison-insight').innerHTML='<span class="insight-arrow">↗</span><span>Sem dados suficientes para comparar os grupos.</span>';$('#ai-reading').textContent='Não há dados neste recorte para produzir uma leitura.';$('#ai-support').textContent='Selecione outra série ou importe respostas.';$('#finding-footnote').textContent='NENHUMA RESPOSTA NO FILTRO';return;
+    $('#finding-title').textContent='Não há respostas para este filtro.';
+    $('#finding-text').textContent='Escolha outra série ou importe um CSV válido para explorar as evidências.';
+    $('#research-conclusion').textContent='Sem respostas neste recorte, não é possível avaliar a hipótese.';
+    $('#comparison-insight').innerHTML='<span class="insight-arrow">↗</span><span>Sem dados suficientes para comparar os grupos.</span>';
+    $('#ai-reading').textContent='Não há dados neste recorte para produzir uma leitura.';
+    $('#ai-support').textContent='Selecione outra série ou importe respostas.';
+    $('#finding-footnote').textContent='NENHUMA RESPOSTA NO FILTRO';
+    return;
   }
+  const grades=selectedGrade()==='todas'?getGradeBreakdown(rows):[];
+  const reversedGrade=grades.find(g=>g.checkedRate<g.uncheckedRate);
   let status,title,text,trend;
-  if(!y.n||!n.n){status='COMPARAÇÃO INCOMPLETA';title='Ainda não dá para comparar os dois grupos.';text=`${y.n?'Há respostas de quem verificou a fonte, mas nenhuma de quem não verificou.':'Há respostas de quem não verificou a fonte, mas nenhuma de quem verificou.'} Amplie a coleta para testar a hipótese ${scope}.`;trend='Um dos grupos não tem respostas neste recorte.';}
-  else if(rows.length<5){status='AMOSTRA MUITO PEQUENA';title='Um sinal inicial — ainda sem base para concluir.';text=`Neste recorte (${rows.length} ${rows.length===1?'resposta':'respostas'}), ${yesP}% de quem verificou a fonte e ${noP}% de quem não verificou identificaram sinais. O número de respostas é baixo demais para sustentar uma conclusão.`;trend=`${yesP}% vs. ${noP}% identificaram sinais, mas o recorte tem apenas ${rows.length} respostas.`;}
-  else if(gap>5){status='HIPÓTESE APOIADA';title='Neste recorte, verificar a fonte acompanha mais identificação de sinais.';text=`${yesP}% de quem verificou a fonte identificou sinais, contra ${noP}% de quem não verificou — diferença de ${gap} pontos percentuais ${scope}${suffix}. O padrão apoia a hipótese, mas não prova que verificar a fonte causou essa diferença.`;trend=`Grupo que verificou a fonte: ${yesP}% identificaram sinais (${y.yes}/${y.n}); grupo que não verificou: ${noP}% (${n.yes}/${n.n}).`;}
-  else if(gap< -5){status='HIPÓTESE NÃO APOIADA';title='Neste recorte, o padrão observado vai contra a hipótese.';text=`${noP}% de quem não verificou a fonte identificou sinais, contra ${yesP}% de quem verificou. A diferença de ${Math.abs(gap)} pontos percentuais ${scope} não apoia a aposta inicial. Refutar uma hipótese também é resultado científico.`;trend=`O grupo que não verificou a fonte identificou mais sinais: ${noP}% vs. ${yesP}%.`}
-  else{status='RESULTADO INCONCLUSIVO';title='Os grupos ficaram próximos neste recorte.';text=`${yesP}% de quem verificou e ${noP}% de quem não verificou identificaram sinais: diferença de apenas ${Math.abs(gap)} pontos percentuais ${scope}. A hipótese não foi claramente confirmada nem refutada pelos dados disponíveis.`;trend=`Diferença de ${Math.abs(gap)} p.p. entre os grupos; resultado inconclusivo.`;}
-  $('#finding-status').innerHTML=`<span class="status-dot"></span> ${status}`;$('#finding-title').textContent=title;$('#finding-text').textContent=text;$('#finding-footnote').textContent=`CONCLUSÃO ATUALIZADA · ${rows.length} RESPOSTAS`;
+  if(!y.n||!n.n){
+    status='COMPARAÇÃO INCOMPLETA';title='Ainda não dá para comparar os dois grupos.';
+    text=`${y.n?'Há respostas de quem verificou a fonte, mas nenhuma de quem não verificou.':'Há respostas de quem não verificou a fonte, mas nenhuma de quem verificou.'} Amplie a coleta para testar a hipótese ${scope}.`;
+    trend='Um dos grupos não tem respostas neste recorte.';
+  }else if(rows.length<5){
+    status='AMOSTRA MUITO PEQUENA';title='Um sinal inicial — ainda sem base para concluir.';
+    text=`Neste recorte (${rows.length} ${rows.length===1?'resposta':'respostas'}), ${yesP}% de quem verificou a fonte e ${noP}% de quem não verificou identificaram sinais. O número de respostas é baixo demais para sustentar uma conclusão.`;
+    trend=`${yesP}% vs. ${noP}% identificaram sinais, mas o recorte tem apenas ${rows.length} respostas.`;
+  }else if(gap>5){
+    status=reversedGrade?'APOIO PARCIAL':'HIPÓTESE APOIADA';
+    title=reversedGrade?'A tendência geral apoia a hipótese, mas varia por série.':'Neste recorte, verificar a fonte acompanha mais identificação de sinais.';
+    text=`${yesP}% (${y.yes}/${y.n}) de quem verificou a fonte identificou sinais, contra ${noP}% (${n.yes}/${n.n}) de quem não verificou: diferença de ${gap} pontos percentuais ${scope}. ${reversedGrade?`O padrão se inverte na ${reversedGrade.grade}; por isso, o apoio à hipótese é parcial.`:'O padrão é compatível com a hipótese, mas não prova causa.'}`;
+    trend=`${yesP}% identificaram sinais entre quem verificou, contra ${noP}% entre quem não verificou.`;
+  }else if(gap< -5){
+    status='HIPÓTESE NÃO APOIADA';title='Neste recorte, o padrão observado vai contra a hipótese.';
+    text=`${noP}% de quem não verificou a fonte identificou sinais, contra ${yesP}% de quem verificou. A diferença de ${Math.abs(gap)} pontos percentuais ${scope} não apoia a aposta inicial. Refutar uma hipótese também é resultado científico.`;
+    trend=`O grupo que não verificou a fonte identificou mais sinais: ${noP}% vs. ${yesP}%.`;
+  }else{
+    status='RESULTADO INCONCLUSIVO';title='Os grupos ficaram próximos neste recorte.';
+    text=`${yesP}% de quem verificou e ${noP}% de quem não verificou identificaram sinais: diferença de apenas ${Math.abs(gap)} pontos percentuais ${scope}. A hipótese não foi claramente confirmada nem refutada pelos dados disponíveis.`;
+    trend=`Diferença de ${Math.abs(gap)} p.p. entre os grupos; resultado inconclusivo.`;
+  }
+  $('#finding-status').innerHTML=`<span class="status-dot"></span> ${status}`;
+  $('#finding-title').textContent=title;
+  $('#finding-text').textContent=text;
+  $('#research-conclusion').textContent=buildResearchConclusion(rows,y,n,gap);
+  $('#finding-footnote').textContent=`CONCLUSÃO ATUALIZADA · ${rows.length} RESPOSTAS`;
   $('#comparison-insight').innerHTML=`<span class="insight-arrow">↗</span><span>${esc(trend)}</span>`;
-  $('#ai-reading').textContent=`${y.n&&n.n?`Estudantes que verificaram a fonte identificaram sinais em ${yesP}% dos casos observados, enquanto o grupo que não verificou identificou em ${noP}%. ${gap>5?'Isso é compatível com a hipótese de associação.':gap< -5?'O padrão observado não acompanha a hipótese inicial.':'A diferença é pequena e não aponta uma associação clara.'}`:'O filtro atual não contém os dois grupos necessários para comparar a hipótese.'} ${isRealData?'Esta é uma leitura exploratória do conjunto recebido.':'Lembre-se: os registros exibidos são sintéticos, criados apenas para demonstrar a visualização.'}`;
+  $('#ai-reading').textContent=`${y.n&&n.n?`Estudantes que verificaram a fonte identificaram sinais em ${yesP}% dos casos observados, enquanto o grupo que não verificou identificou em ${noP}%. ${gap>5?'Isso é compatível com a hipótese de associação.':gap< -5?'O padrão observado não acompanha a hipótese inicial.':'A diferença é pequena e não aponta uma associação clara.'}`:'O filtro atual não contém os dois grupos necessários para comparar a hipótese.'} ${isImportedData?'Esta é uma leitura exploratória do conjunto recebido.':'Lembre-se: os registros exibidos são sintéticos, criados apenas para demonstrar a visualização.'}`;
   $('#ai-support').textContent=y.n&&n.n?`No recorte, ${y.yes} de ${y.n} que verificaram a fonte e ${n.yes} de ${n.n} que não verificaram identificaram sinais. A diferença observada é de ${Math.abs(gap)} p.p.`:'Precisamos observar os dois grupos — quem verificou e quem não verificou — para comparar as proporções.';
 }
 function update(){const rows=currentRows();renderMetrics(rows);renderComparison(rows);renderActions(rows);renderInterpretation(rows);}
@@ -109,7 +183,7 @@ function fetchSavedResponses(){
       savedRowCount=clean.length;
       if(clean.length){
         data=clean;
-        isRealData=true;
+        isImportedData=true;
         $('#dataset-title').textContent='Respostas recebidas';
         $('#dataset-description').textContent=`${clean.length} respostas anônimas salvas na planilha`;
         update();
@@ -185,7 +259,7 @@ $('#survey-form').addEventListener('submit',async event=>{
     button.disabled=false;
   }
 });
-$('#csv-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const text=await file.text();const parsed=parseCSV(text);data=parsed;isRealData=true;$('#dataset-title').textContent=file.name;$('#dataset-description').textContent=`${parsed.length} registros importados nesta sessão · confira anonimização e origem real`;update();showToast(`${parsed.length} registros carregados. Para a pesquisa, use 20+ respostas reais e anônimas.`)}catch(err){showToast(err.message)}finally{event.target.value=''}});
+$('#csv-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const text=await file.text();const parsed=parseCSV(text);data=parsed;isImportedData=true;$('#dataset-title').textContent='Respostas do CSV';$('#dataset-description').textContent=`${parsed.length} registros anônimos · arquivo fornecido`;update();showToast(`${parsed.length} registros carregados. Para a pesquisa, use 20+ respostas reais e anônimas.`)}catch(err){showToast(err.message)}finally{event.target.value=''}});
 $('#download-csv').addEventListener('click',()=>{const rows=currentRows();const csv=['serie,verificou_fonte,identificou_sinais,acao',...rows.map(r=>[r.serie,r.verificou_fonte,r.identificou_sinais,r.acao].map(v=>`"${v.replaceAll('"','""')}"`).join(','))].join('\n');const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));link.download='dados-anonimos-dashboard.csv';link.click();URL.revokeObjectURL(link.href);showToast(`${rows.length} respostas exportadas em CSV.`)});
 $('#copy-consent').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#consent-text').textContent);showToast('Aviso de consentimento copiado.')}catch{showToast('Não foi possível copiar automaticamente. Selecione o texto do aviso.')}});
 update();

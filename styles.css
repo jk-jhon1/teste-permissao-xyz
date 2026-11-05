@@ -70,3 +70,9 @@
 .chart-head p{font-size:13px}
 .chart-legend,.stacked-legend span{font-size:14px}
 @media(min-width:1101px){.chart-legend,.stacked-legend span{font-size:16.5px}}
+
+.research-conclusion{margin-top:15px;padding:12px 13px;background:#0c1626;border-left:2px solid var(--cyan);border-radius:3px}
+.research-conclusion-label{font:500 9px var(--mono);letter-spacing:.09em;color:var(--cyan);margin-bottom:7px}
+.research-conclusion p{margin:0;color:#c1ccda;font-size:11px;line-height:1.7}
+@media(min-width:1101px){.research-conclusion p{font-size:14px}.research-conclusion-label{font-size:11px}}
+@media(max-width:520px){.research-conclusion{padding:10px}.research-conclusion p{font-size:10.5px}}
